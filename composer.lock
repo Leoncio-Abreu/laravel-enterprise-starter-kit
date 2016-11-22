@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8e825669a74aea90b87b23e911067c89",
-    "content-hash": "321175d8b9f6c906187ef23ba5132ee6",
+    "hash": "cb6d5c277a6ab7552ffcff5e30d51a44",
+    "content-hash": "a6305290297314959867451eca326a3a",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -936,7 +936,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/51f6934c19635fa1c69680482522c734a0121463",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/432b80084acb401f9f2daba461679ace39cf67df",
                 "reference": "432b80084acb401f9f2daba461679ace39cf67df",
                 "shasum": ""
             },
@@ -1178,16 +1178,16 @@
         },
         {
             "name": "intervention/image",
-            "version": "2.3.7",
+            "version": "2.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Intervention/image.git",
-                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698"
+                "reference": "4064a980324f6c3bfa2bd981dfb247afa705ec3c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Intervention/image/zipball/22088b04728a039bd1fc32f7e79a89a118b78698",
-                "reference": "22088b04728a039bd1fc32f7e79a89a118b78698",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/4064a980324f6c3bfa2bd981dfb247afa705ec3c",
+                "reference": "4064a980324f6c3bfa2bd981dfb247afa705ec3c",
                 "shasum": ""
             },
             "require": {
@@ -1236,7 +1236,7 @@
                 "thumbnail",
                 "watermark"
             ],
-            "time": "2016-04-26 14:08:40"
+            "time": "2016-09-01 17:04:03"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -3961,16 +3961,16 @@
         },
         {
             "name": "zofe/rapyd",
-            "version": "2.1.15",
+            "version": "2.1.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zofe/rapyd-laravel.git",
-                "reference": "51158043b3a9f9ee5e7548d37a7d3b9d986af5fb"
+                "reference": "5790cfea4cc6e627679c9ae58d30aced6dec9a56"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zofe/rapyd-laravel/zipball/51158043b3a9f9ee5e7548d37a7d3b9d986af5fb",
-                "reference": "51158043b3a9f9ee5e7548d37a7d3b9d986af5fb",
+                "url": "https://api.github.com/repos/zofe/rapyd-laravel/zipball/5790cfea4cc6e627679c9ae58d30aced6dec9a56",
+                "reference": "5790cfea4cc6e627679c9ae58d30aced6dec9a56",
                 "shasum": ""
             },
             "require": {
@@ -4011,7 +4011,7 @@
                 "form",
                 "laravel"
             ],
-            "time": "2016-06-24 12:41:48"
+            "time": "2016-09-20 15:01:13"
         }
     ],
     "packages-dev": [
@@ -4281,12 +4281,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Jeroen-G/laravel-packager.git",
-                "reference": "836b2d0adedfee14e2a76575b77dd16ac5b4cc71"
+                "reference": "84dc5f885fcd28fef25c2c01ab93ea6d7a5ecc18"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/Jeroen-G/laravel-packager/zipball/84dc5f885fcd28fef25c2c01ab93ea6d7a5ecc18",
-                "reference": "836b2d0adedfee14e2a76575b77dd16ac5b4cc71",
+                "reference": "84dc5f885fcd28fef25c2c01ab93ea6d7a5ecc18",
                 "shasum": ""
             },
             "require": {
@@ -4321,7 +4321,7 @@
                 "package",
                 "packager"
             ],
-            "time": "2016-06-27 14:24:24"
+            "time": "2016-11-03 07:53:20"
         },
         {
             "name": "mockery/mockery",

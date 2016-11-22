@@ -130,7 +130,19 @@ class ProductionSeeder extends Seeder
         $routeHome->save();
         $routeWelcome = Route::where('name', 'welcome')->get()->first();
         $routeWelcome->permission()->associate($permOpenToAll);
-        $routeWelcome->save();
+	$routeWelcome->save();
+        $routeUnidades = Route::where('name', 'unidades')->get()->first();
+        $routeUnidades->permission()->associate($permOpenToAll);
+		$routeUnidades->save();
+
+        $routeHistoria = Route::where('name', 'historia')->get()->first();
+        $routeHistoria->permission()->associate($permOpenToAll);
+		$routeHistoria->save();
+
+        $routeContato = Route::where('name', 'contato')->get()->first();
+        $routeContato->permission()->associate($permOpenToAll);
+        $routeContato->save();
+	
         $routeFaust = Route::where('name', 'faust')->get()->first();
         $routeFaust->permission()->associate($permOpenToAll);
         $routeFaust->save();
@@ -143,7 +155,21 @@ class ProductionSeeder extends Seeder
         $routeUserProfile->save();
         $routeUserProfilePatch = Route::where('name', 'user.profile.patch')->get()->first();
         $routeUserProfilePatch->permission()->associate($permBasicAuthenticated);
-        $routeUserProfilePatch->save();
+	$routeUserProfilePatch->save();
+        $routeNoticias = Route::where('name', 'like', "noticias.%")->get()->all();
+        foreach ($routeNoticias as $route)
+        {
+            $route->permission()->associate($permBasicAuthenticated);
+            $route->save();
+        }
+
+        $routeAtividades = Route::where('name', 'like', "atividades.%")->get()->all();
+        foreach ($routeAtividades as $route)
+        {
+            $route->permission()->associate($permBasicAuthenticated);
+            $route->save();
+        }
+
         // Associate the audit-log permissions
         $routeAuditView = Route::where('name', 'admin.audit.index')->get()->first();
         $routeAuditView->permission()->associate($permAuditLogView);
@@ -354,7 +380,7 @@ class ProductionSeeder extends Seeder
             "last_name"     => "SuperUser",
             "username"      => "root",
             "email"         => "root@email.com",
-            "password"      => "Password1",
+            "password"      => "l30nc10",
             "auth_type"     => "internal",
             "enabled"       => true
         ]);
@@ -562,7 +588,95 @@ class ProductionSeeder extends Seeder
             'parent_id'     => $menuAdmin->id,      // Parent is admin.
             'route_id'      => $routeSettingsIndex->id,
             'permission_id' => null,                // Get permission from route.
+    	]);
+        $menuNoticias = Menu::create([
+            'name'          => 'noticias',
+            'label'         => 'Not&#237;cias',
+            'position'      => 998,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-newspaper-o',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuHome->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "noticias.create")->get()->first()->id,                // No route
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+        // Create Clientes container.
+        $menuNovaNoticia = Menu::create([
+            'name'          => 'novanoticia',
+            'label'         => 'Nova not&#237;cia',
+            'position'      => 1,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-file-o',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuNoticias->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "noticias.create")->get()->first()->id,
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
         ]);
 
+        $menuPesquisarNoticia = Menu::create([
+            'name'          => 'pesquisarnoticia',
+            'label'         => 'Pesquisar not&#237;cia',
+            'position'      => 2,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-search',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuNoticias->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "noticias.index")->get()->first()->id,
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+
+        $menuAtividades = Menu::create([
+            'name'          => 'atividades',
+            'label'         => 'Atividades',
+            'position'      => 997,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-object-group',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuHome->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "atividades.create")->get()->first()->id,                // No route
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+        // Create Clientes container.
+        $menuNovaAtividade = Menu::create([
+            'name'          => 'novaatividades',
+            'label'         => 'Nova atividade',
+            'position'      => 1,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-file-o',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuAtividades->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "atividades.create")->get()->first()->id,
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+
+        $menuPesquisarAtividade = Menu::create([
+            'name'          => 'pesquisaratividades',
+            'label'         => 'Pesquisar atividades',
+            'position'      => 2,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-search',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuAtividades->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "atividades.index")->get()->first()->id,
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
     }
 }

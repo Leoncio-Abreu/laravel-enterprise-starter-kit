@@ -1,37 +1,131 @@
-@extends('layouts.master')
-
+@extends('layouts.frontend_master')
 @section('content')
-    <h1>{{ trans('general.text.welcome') }}</h1>
-    <div class="box-body">
-        Mei ad adhuc summo cetero. Qui assum habemus signiferumque cu,
-        per idque evertitur cu, doming corpora deserunt te vis. Melius
-        oporteat ea usu. Timeam tincidunt cum et. Eam justo utroque no.
-        Enim aliquando abhorreant ea sea, vis ex efficiendi referrentur,
-        ei pro tacimates sadipscing. Et consulatu gloriatur
-        signiferumque vim, an solum antiopam periculis cum.
-    </div>
-    <div class="box-body">
-        Erat equidem ad sed. No has altera voluptatum, sit agam possim
-        bonorum no. Munere delenit duo eu. Sed prompta vivendum detraxit
-        an.
-        Ex recusabo suscipiantur vim, eam legendos scriptorem cu. Cum ex
-        nibh offendit adipiscing. Ea has iriure atomorum, iudico commodo
-        ut usu. Eruditi fierent fastidii in has, vix diam decore putent
-        ad. Hinc tollit minimum et sit, munere putent assueverit pri id.
-    </div>
-    <div class="box-body">
-        Bonorum admodum contentiones vis in. Ne eum hinc minim adolescens.
-        Ea eum veniam delectus philosophia, nam ad cibo cotidieque, integre
-        inermis mea an. Movet equidem lobortis in has, vel ad eripuit
-        debitis accusamus.
-        Offendit recteque cu pri, mel id solet dicant. Ea reque iriure ius,
-        te virtute euripidis referrentur his, mea legere semper melius cu.
-        Eu pri utroque percipit contentiones. Pri timeam fierent ad, ne
-        menandri perpetua delicatissimi vis. Sanctus ullamcorper no mea. Ex
-        vel rebum erant.
-        Ius dolorum persecuti ea. Duo at quot expetenda. Id possim delenit
-        epicuri mei. Ei eum graeco legimus vulputate. Quas dicat vim id, pro
-        id dolor consetetur, vel cu aeque pertinax qualisque. Et vim agam
-        graeci, vis purto accusam ex.
-    </div>
-@endsection
+
+      <div class="row">
+          <div class="col-md-5">
+              <div class="box">
+                      <div class="panel panel-default">
+                        <div class="panel-heading text-center"><img class="img-rounded text-center img-responsive" alt="Bootstrap Image Preview" src="/upload/noticias/banner/{!! $noticias{0}->banner !!}"></div>
+                        <div class="panel-body">
+                          <p>{!! $noticias{0}->descricao !!}</p>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{0}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                      </div>
+              </div>
+          </div>
+          <div class="col-md-7">
+          <div class="box">
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">{!! $noticias{1}->titulo !!}</h2></div>
+                        <div class="panel-body">
+                          <p>{!! $noticias{1}->descricao !!}</p>
+                          <br>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{1}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">{!! $noticias{2}->titulo !!}</h2></div>
+                        <div class="panel-body">
+                          <p>{!! $noticias{2}->descricao !!}</p>
+                          <br>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{2}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">{!! $noticias{3}->titulo !!}</h2></div>
+                        <div class="panel-body">
+                          <p>{!! $noticias{3}->descricao !!}</p>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{3}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">{!! $noticias{4}->titulo !!}</h2></div>
+                        <div class="panel-body">
+    		              <p>{!! $noticias{4}->descricao !!}<br></p>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{4}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">{!! $noticias{5}->titulo !!}</h2></div>
+                        <div class="panel-body">
+                          <p>{!! $noticias{5}->descricao !!}<br><br></p>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{5}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">{!! $noticias{6}->titulo !!}</h2></div>
+                        <div class="panel-body">
+            		      <p>{!! $noticias{6}->descricao !!}<br><br></p>
+                        <div class="bootstrap-eh-pull-bottom clearfix">
+                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{6}->id !!}" role="button">+ mais »</a>
+                        </div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          </div>
+      </div>
+      <div class="row" style="padding-top:15px;">
+          <div class="col-md-3">
+                  <a href="/view/atividade/{!! $atividades{0}->id !!}"><div class="panel panel-default">
+                    <div class="panel-heading text-center"><img alt="Bootstrap Image Preview" src="/upload/atividades/banner/{!! $atividades{0}->banner !!}" class="img-rounded text-center img-responsive"></div>
+                    <div class="panel-body">
+                      <p>{!! $atividades{0}->descricao !!}</p>
+                    </div>
+                  </div></a>
+          </div>
+          <div class="col-md-3">
+                  <a href="/view/atividade/{!! $atividades{1}->id !!}"><div class="panel panel-default">
+                    <div class="panel-heading text-center"><img alt="Bootstrap Image Preview" src="/upload/atividades/banner/{!! $atividades{1}->banner !!}" class="img-rounded text-center img-responsive"></div>
+                    <div class="panel-body">
+                      <p>{!! $atividades{1}->descricao !!}</p>
+                    </div>
+                  </div></a>
+          </div>
+          <div class="col-md-3">
+                  <a href="/view/atividade/{!! $atividades{2}->id !!}"><div class="panel panel-default">
+                    <div class="panel-heading text-center"><img alt="Bootstrap Image Preview" src="/upload/atividades/banner/{!! $atividades{2}->banner !!}" class="img-rounded text-center img-responsive"></div>
+                    <div class="panel-body">
+                      <p>{!! $atividades{2}->descricao !!}</p>
+                    </div>
+                  </div></a>
+          </div>
+          <div class="col-md-3">
+                  <a href="/view/atividade/{!! $atividades{0}->id !!}"><div class="panel panel-default">
+                    <div class="panel-heading text-center"><img alt="Bootstrap Image Preview" src="/upload/atividades/banner/{!! $atividades{3}->banner !!}" class="img-rounded text-center img-responsive"></div>
+                    <div class="panel-body">
+                      <p>{!! $atividades{3}->descricao !!}</p>
+                    </div>
+                  </div></a>
+          </div>
+      </div>
+@stop
