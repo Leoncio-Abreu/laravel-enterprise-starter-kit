@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Atividade;
 use Zofe\Rapyd\Rapyd;
+use Image;
 
 class AtividadesController extends Controller
 {
@@ -63,8 +64,8 @@ class AtividadesController extends Controller
 		$form->submit('Salvar');
 
         $form->saved(function () use ($form) {
-            $form->message("Atividade salva com sucesso!");
             $form->link("/atividades/create","Nova atividade");
+			return \Redirect::to('atividades/index')->with("message","Atividade salva com sucesso!");
         });
 		$form->build();
         Rapyd::js('summernote/summernote.min.js');
@@ -74,32 +75,7 @@ class AtividadesController extends Controller
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-		Rapyd::script("
-		var IMAGE_PATH = '{{ base_path() }}' + '/upload/atividades/imageUpload/';
-						$.ajaxSetup({
-							headers: { 'X-CSRF-Token' : $('meta[name=_token]').attr('content')     }
-						});
-						$('#texto').summernote({
-							height: 400,
-							lang: 'pt-BR',
-							onImageUpload: function(files) {
-								data = new FormData();
-								data.append('image', files[0]);
-								$.ajax({
-									data: data,
-									type: 'POST',
-									url: '/atividades/imageUpload',
-									cache: false,
-									contentType: false,
-									processData: false,
-									success: function(filename) {
-										var file_path = IMAGE_PATH + filename;
-										console.log(file_path);
-										$('#texto').summernote('insertImage', file_path);
-									}
-								});
-							}
-						});");
+		Rapyd::script("$('#texto').summernote({ height: 400,	lang: 'pt-BR' });");
         return $form->view('atividades.create', compact('form', 'page_title', 'page_description'));
     }
 
@@ -136,32 +112,7 @@ class AtividadesController extends Controller
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-		Rapyd::script("
-		var IMAGE_PATH = '{{ base_path() }}' + '/upload/atividades/imageUpload/';
-						$.ajaxSetup({
-							headers: { 'X-CSRF-Token' : $('meta[name=_token]').attr('content')     }
-						});
-						$('#texto').summernote({
-							height: 400,
-							lang: 'pt-BR',
-							onImageUpload: function(files) {
-								data = new FormData();
-								data.append('image', files[0]);
-								$.ajax({
-									data: data,
-									type: 'POST',
-									url: '/atividades/imageUpload',
-									cache: false,
-									contentType: false,
-									processData: false,
-									success: function(filename) {
-										var file_path = IMAGE_PATH + filename;
-										console.log(file_path);
-										$('#texto').summernote('insertImage', file_path);
-									}
-								});
-							}
-						});");
+		Rapyd::script("$('#texto').summernote({ height: 400, lang: 'pt-BR' });");
         return $edit->view('atividades.edit', compact('edit', 'page_title', 'page_description'));
 	}
 

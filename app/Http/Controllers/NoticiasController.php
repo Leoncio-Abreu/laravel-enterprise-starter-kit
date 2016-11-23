@@ -35,7 +35,7 @@ class NoticiasController extends Controller
 		$grid->attributes(array("class"=>"table table-striped"));
         $grid->add('visualizar','Visualizar', true);
         $grid->add('titulo','Titulo', true);
-        $grid->add('descricao', true);
+//        $grid->add('descricao', true);
         $grid->edit('edit', 'Editar','modify|delete');
         $grid->paginate(20);
         $grid->build();
@@ -58,23 +58,61 @@ class NoticiasController extends Controller
 		$form->add('titulo','Titulo', 'text')->rule('required|max:32');
 		$form->add('descricao','Descricao', 'text')->rule('required|max:128');
         $form->add('banner','Foto em destaque', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/noticias/banner/')->preview(120,80);
-		$form->add('texto','Texto', 'textarea')->attr('class','redactor')->rule('required');
+		$form->add('texto','Texto', 'textarea')->attr('id','texto')->rule('required');
 /*        $form->add('foto1','Foto 1', 'image')->move('uploads/noticias/')->fit(240, 160)->preview(120,80);
 */
 		$form->submit('Save');
 
         $form->saved(function () use ($form) {
-            $form->message("Noticía salva com sucesso!");
             $form->link("/noticias/create","Nova notícia");
+			$message = \Input::get('texto','<p></p>'); // Summernote input field
+			if ($message)
+			$dom = new \DomDocument();
+			$dom->loadHtml( mb_convert_encoding($message, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+		
+			$images = $dom->getElementsByTagName('img');
+			// foreach <img> in the submited message
+			foreach($images as $img){
+				$src = $img->getAttribute('src');
+				
+				// if the img source is 'data-url'
+				if(preg_match('/data:image/', $src)){
+					
+					// get the mimetype
+					preg_match('/data:image\/(?<mime>.*?)\;/', $src, $groups);
+					$mimetype = $groups['mime'];
+					
+					// Generating a random filename
+					$filename = uniqid();
+					$filepath = "/upload/noticias/imageUpload/$filename.$mimetype";
+		
+					// @see http://image.intervention.io/api/
+					$image = Image::make($src)
+					  // resize if required
+					  /* ->resize(300, 200) */
+					  ->encode($mimetype, 100) 	// encode file to the specified mimetype
+					  ->save(public_path($filepath));
+					
+					$new_src = asset($filepath);
+					$img->removeAttribute('src');
+					$img->setAttribute('src', $new_src);
+				} // <!--endif
+			} // <!--endforeach
+			dd($form);
+			$form->model->texto = $dom->saveHTML();
+			$form->model->save();
+			return \Redirect::to('noticias/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$form->build();
-        Rapyd::js('redactor/jquery.browser.min.js');
-        Rapyd::js('redactor/redactor.min.js');
-        Rapyd::css('redactor/css/redactor.css');
-        Rapyd::script('$("#texto").redactor({imageUpload: "/noticias/imageUpload", fileUpload: "/noticias/fileUpload", lang: "pt_br", focus: "false", overlay: "false"} );');
-        Rapyd::script("$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name=\"csrf-token\"]').attr('content')} });");
-
-        return $form->view('noticias.create', compact('form', 'page_title', 'page_description'));
+        Rapyd::js('summernote/summernote.min.js');
+        Rapyd::js('summernote/lang/summernote-pt-BR.js');
+        Rapyd::css('summernote/summernote.css');
+		Rapyd::css('summernote\plugin\databasic\summernote-ext-databasic.css');
+		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
+		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
+		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
+		Rapyd::script("$('#texto').summernote({ height: 400, lang: 'pt-BR' });");
+		return $form->view('noticias.create', compact('form', 'page_title', 'page_description'));
     }
 
     /**
@@ -115,20 +153,52 @@ $edit->link("noticias/index","Voltar", "BL")->back('');
 		$edit->add('titulo','Titulo', 'text')->rule('required|max:32');
 		$edit->add('descricao','Descricao', 'text')->rule('required|max:128');
         $edit->add('banner','Foto em destaque', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/noticias/banner/')->preview(120,80);
-		$edit->add('texto','Texto', 'textarea')->attr('class','redactor')->rule('required');
-//		$edit->submit('Save');
+		$edit->add('texto','Texto', 'textarea')->attr('id','texto')->rule('required');
+
 
         $edit->saved(function () use ($edit) {
+			$message = \Input::get('texto','<p></p>'); // Summernote input field
+
+			$dom = new \DomDocument();
+			$dom->loadHtml( mb_convert_encoding($message, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+			$images = $dom->getElementsByTagName('img');
+			// foreach <img> in the submited message
+			foreach($images as $img){
+				$src = $img->getAttribute('src');
+				// if the img source is 'data-url'
+				if(preg_match('/data:image/', $src)){
+					// get the mimetype
+					preg_match('/data:image\/(?<mime>.*?)\;/', $src, $groups);
+					$mimetype = $groups['mime'];
+					// Generating a random filename
+					$filename = uniqid();
+					$filepath = "/upload/noticias/imageUpload/$filename.$mimetype";
+					// @see http://image.intervention.io/api/
+					$image = Image::make($src)
+					  // resize if required
+					  /* ->resize(300, 200) */
+					  ->encode($mimetype, 100) 	// encode file to the specified mimetype
+					  ->save(public_path($filepath));
+					$new_src = asset($filepath);
+					$img->removeAttribute('src');
+					$img->setAttribute('src', $new_src);
+				} // <!--endif
+			} // <!--endforeach
+//			dd($edit);
+			$edit->model->texto = $dom->saveHTML();
+			$edit->model->save();
 			return \Redirect::to('noticias/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$edit->build();
-//		if $form->hasRedirect()
-        Rapyd::js('redactor/jquery.browser.min.js');
-        Rapyd::js('redactor/redactor.min.js');
-        Rapyd::css('redactor/css/redactor.css');
-        Rapyd::script('$("#texto").redactor({imageUpload: "/noticias/imageUpload", fileUpload: "/noticias/fileUpload", lang: "pt_br", focus: "false", overlay: "false"} );');
-        Rapyd::script("$.ajaxSetup({headers: {'X-CSRF-TOKEN': $('meta[name=\"csrf-token\"]').attr('content')} });");
-        return $edit->view('noticias.edit', compact('edit', 'page_title', 'page_description'));
+        Rapyd::js('summernote/summernote.min.js');
+        Rapyd::js('summernote/lang/summernote-pt-BR.js');
+        Rapyd::css('summernote/summernote.css');
+		Rapyd::css('summernote\plugin\databasic\summernote-ext-databasic.css');
+		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
+		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
+		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
+		Rapyd::script("$('#texto').summernote({ height: 400, lang: 'pt-BR' });");
+		return $edit->view('noticias.edit', compact('edit', 'page_title', 'page_description'));
 	}
 
     /**

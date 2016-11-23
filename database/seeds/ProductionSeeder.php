@@ -155,7 +155,7 @@ class ProductionSeeder extends Seeder
         $routeUserProfile->save();
         $routeUserProfilePatch = Route::where('name', 'user.profile.patch')->get()->first();
         $routeUserProfilePatch->permission()->associate($permBasicAuthenticated);
-	$routeUserProfilePatch->save();
+		$routeUserProfilePatch->save();
         $routeNoticias = Route::where('name', 'like', "noticias.%")->get()->all();
         foreach ($routeNoticias as $route)
         {
@@ -170,7 +170,17 @@ class ProductionSeeder extends Seeder
             $route->save();
         }
 
-        // Associate the audit-log permissions
+        $routeAtividades = Route::where('name', 'like', "slides.%")->get()->all();
+        foreach ($routeAtividades as $route)
+        {
+            $route->permission()->associate($permBasicAuthenticated);
+            $route->save();
+        }
+        $routePainel = Route::where('name', 'patch')->get()->first();
+        $routePainel->permission()->associate($permBasicAuthenticated);
+		$routePainel->save();
+
+		// Associate the audit-log permissions
         $routeAuditView = Route::where('name', 'admin.audit.index')->get()->first();
         $routeAuditView->permission()->associate($permAuditLogView);
         $routeAuditView->save();
@@ -678,5 +688,49 @@ class ProductionSeeder extends Seeder
                                                    // any sub-items, the admin menu will be rendered, otherwise it will
                                                     // not.
         ]);
-    }
+        $menuSlides = Menu::create([
+            'name'          => 'slides',
+            'label'         => 'Slides',
+            'position'      => 996,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-slideshare',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuHome->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "slides.create")->get()->first()->id,                // No route
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+        // Create Clientes container.
+        $menuNovaAtividade = Menu::create([
+            'name'          => 'novoslide',
+            'label'         => 'Novo slide',
+            'position'      => 1,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-file-image-o',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuSlides->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "slides.create")->get()->first()->id,
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+
+        $menuPesquisarAtividade = Menu::create([
+            'name'          => 'pesquisarslides',
+            'label'         => 'Pesquisar slides',
+            'position'      => 2,                 // Artificially high number to ensure that it is rendered last.
+            'icon'          => 'fa fa-search',
+            'separator'     => false,
+            'url'           => null,                // No url.
+            'enabled'       => true,
+            'parent_id'     => $menuSlides->id,       // Parent is root.
+            'route_id'      => Route::where('name', 'like', "slides.index")->get()->first()->id,
+            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
+                                                   // any sub-items, the admin menu will be rendered, otherwise it will
+                                                    // not.
+        ]);
+	}
 }

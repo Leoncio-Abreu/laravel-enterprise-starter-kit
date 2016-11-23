@@ -34,12 +34,13 @@ Route::get( 'faust',                    ['as' => 'faust',                   'use
 // Application routes...
 Route::get( '/',       ['as' => 'backslash',   'uses' => 'HomeController@index']);
 Route::get( 'home',    ['as' => 'home',        'uses' => 'HomeController@index']);
+Route::get( 'painel',    ['as' => 'painel',        'uses' => 'HomeController@painel']);
 Route::get( 'welcome', ['as' => 'welcome',     'uses' => 'HomeController@welcome']);
 Route::get( 'unidades', ['as' => 'unidades',     'uses' => 'HomeController@unidades']);
 Route::get( 'historia', ['as' => 'historia',     'uses' => 'HomeController@historia']);
 Route::get( 'contato', ['as' => 'contato',     'uses' => 'HomeController@contato']);
-Route::get( 'view/atividade/{id?}/{flag?}', ['as' => 'view.atividade',     'uses' => 'HomeController@viewatividade']);
-Route::get( 'view/noticia/{id?}/{flag?}', ['as' => 'view.noticia',     'uses' => 'HomeController@viewnoticia']);
+Route::get( 'view/atividade/{id?}', ['as' => 'view.atividade',     'uses' => 'HomeController@viewatividade']);
+Route::get( 'view/noticia/{id?}', ['as' => 'view.noticia',     'uses' => 'HomeController@viewnoticia']);
 
 // Routes in this group must be authorized.
 Route::group(['middleware' => 'authorize'], function () {
@@ -51,18 +52,19 @@ Route::group(['middleware' => 'authorize'], function () {
 	Route::any( 'noticias/create',   ['as' => 'noticias.create', 'uses' => 'NoticiasController@create']);
 	Route::any( 'noticias/index',   ['as' => 'noticias.index', 'uses' => 'NoticiasController@index']);
 	Route::any( 'noticias/store',   ['as' => 'noticias.store', 'uses' => 'NoticiasController@store']);
-	Route::post('noticias/imageUpload', ['as' => 'noticias.imageUpload','uses' => 'NoticiasController@imageUpload']);
-	Route::post('noticias/fileUpload', ['as' => 'noticias.fileUpload','uses' => 'NoticiasController@fileUpload']);
 	Route::any('noticias/edit/{one?}/{two?}/{three?}/{four?}/{five?}',    ['as' => 'noticias.edit',    'uses' => 'NoticiasController@edit']);
 
 	Route::any( 'atividades/create',   ['as' => 'atividades.create', 'uses' => 'AtividadesController@create']);
 	Route::any( 'atividades/index',   ['as' => 'atividades.index', 'uses' => 'AtividadesController@index']);
 	Route::any( 'atividades/store',   ['as' => 'atividades.store', 'uses' => 'AtividadesController@store']);
-	Route::post('atividades/imageUpload', ['as' => 'atividades.imageUpload','uses' => 'AtividadesController@imageUpload']);
-	Route::post('atividades/fileUpload', ['as' => 'atividades.fileUpload','uses' => 'AtividadesController@fileUpload']);
 	Route::any('atividades/edit/{one?}/{two?}/{three?}/{four?}/{five?}',    ['as' => 'atividades.edit',    'uses' => 'AtividadesController@edit']);
     
-    // Site administration section
+	Route::any( 'slides/create',   ['as' => 'slides.create', 'uses' => 'SlidesController@create']);
+	Route::any( 'slides/index',   ['as' => 'slides.index', 'uses' => 'SlidesController@index']);
+	Route::any( 'slides/store',   ['as' => 'slides.store', 'uses' => 'SlidesController@store']);
+	Route::any('slides/edit/{one?}/{two?}/{three?}/{four?}/{five?}',    ['as' => 'slides.edit',    'uses' => 'SlidesController@edit']);
+
+	// Site administration section
     Route::group(['prefix' => 'admin'], function () {
         // User routes
         Route::post(  'users/enableSelected',          ['as' => 'admin.users.enable-selected',  'uses' => 'UsersController@enableSelected']);

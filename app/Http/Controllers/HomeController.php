@@ -4,7 +4,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Redirect;
 use Setting;
-
+use App\Atividade;
+use App\Noticia;
+use App\Slide;
 class HomeController extends Controller
 {
     /**
@@ -29,7 +31,6 @@ class HomeController extends Controller
      */
     public function welcome()
     {
- //dd(Carbon::today()->toDateString()));
 		$noticias = \DB::table('noticias')
                     ->orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
@@ -44,104 +45,71 @@ class HomeController extends Controller
 					->skip(0)
 					->take(10)
                     ->get();
-		
-		$page_title = trans('general.text.welcome');
-        $page_description = "This is the welcome page";
+ 		$slides = \DB::table('slide')
+					->orderBy('visualizar','desc')
+                    ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
+                    ->where('ativo', '=', '1')
+                    ->get();
 
-        return view('welcome', compact('noticias', 'atividades'));
+        return view('welcome', compact('noticias', 'atividades', 'slides'));
     }
 
     public function viewatividade($id, $flag = null)
     {
 		if ( preg_match('/\d/', $id) === 1  ){
 
-		$dnow = \DB::table('atividades')
-				->where('id', '=', $id)
-				->value('visualizar');
+			$dnow = \DB::table('atividades')->where('id', '=', $id)
+					->value('visualizar');
 
-		$prevPages = \DB::table('atividades')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '>', $dnow)
-                    ->where('ativo', '=', '1')
-                    ->count();
+			$prevPages = \DB::table('atividades')->orderBy('visualizar','desc')
+						->where('visualizar', '>', $dnow)
+						->where('ativo', '=', '1')
+						->first();
+			
+			$nextPages = \DB::table('atividades')->orderBy('visualizar','desc')
+						->where('visualizar', '<', $dnow)
+						->where('ativo', '=', '1')
+						->first();
 
-		$nextPages = \DB::table('atividades')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '<', $dnow)
-                    ->where('ativo', '=', '1')
-                    ->count();
-
-
-		if ( ($flag == 'next') & ($nextPages > 0) ) {
-			$prevPages += 1;
-			$atividade = \DB::table('atividades')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '<', $dnow)
-                    ->where('ativo', '=', '1')
-					->first();
+			$atividade = Atividade::where('id', '=', $id)->first();
+				
+			if (count($atividade)) {
+				return view('atividades', compact('atividade', 'prevPages', 'nextPages'));
+			}
+			else {
+				return view('blank');
+			
+			}
 		}
-		else if ( ($flag == 'prev') & ($prevPages > 0) ) {
-			$prevPages -= 1;
-			$atividade = \DB::table('atividades')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '>', $dnow)
-                    ->where('ativo', '=', '1')
-					->first();
-		}
-		else {
-			$atividade = \DB::table('atividades')
-				->where('id', '=', $id)
-				->first();
-		}
-
-        return view('atividades', compact('atividade', 'prevPages', 'nextPages'));
-		}
-    }
+	}
 
     public function viewnoticia($id, $flag = null)
     {
 		if ( preg_match('/\d/', $id) === 1  ){
 
-		$dnow = \DB::table('noticias')
-				->where('id', '=', $id)
-				->value('visualizar');
+			$dnow = Noticia::where('id', '=', $id)
+					->value('visualizar');
 
-		$prevPages = \DB::table('noticias')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '>', $dnow)
-                    ->where('ativo', '=', '1')
-                    ->count();
+			$prevPages = Noticia::orderBy('visualizar','desc')
+						->where('visualizar', '>', $dnow)
+						->where('ativo', '=', '1')
+						->first();
+			
+			$nextPages = Noticia::orderBy('visualizar','desc')
+						->where('visualizar', '<', $dnow)
+						->where('ativo', '=', '1')
+						->first();
 
-		$nextPages = \DB::table('noticias')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '<', $dnow)
-                    ->where('ativo', '=', '1')
-                    ->count();
-
-
-		if ( ($flag == 'next') & ($nextPages > 0) ) {
-			$prevPages += 1;
-			$noticia = \DB::table('noticias')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '<', $dnow)
-                    ->where('ativo', '=', '1')
+			$noticia = Noticia::where('id', '=', $id)
 					->first();
-		}
-		else if ( ($flag == 'prev') & ($prevPages > 0) ) {
-			$prevPages -= 1;
-			$noticia = \DB::table('noticias')
-                    ->orderBy('visualizar','desc')
-                    ->where('visualizar', '>', $dnow)
-                    ->where('ativo', '=', '1')
-					->first();
-		}
-		else {
-			$noticia = \DB::table('noticias')
-				->where('id', '=', $id)
-				->first();
-		}
-
-        return view('noticias', compact('noticia', 'prevPages', 'nextPages'));
+				
+			if (count($noticia)) {
+				return view('atividades', compact('noticia', 'prevPages', 'nextPages'));
+			}
+			else {
+				return view('blank');
+			
+			}
 		}
     }
 
@@ -169,4 +137,11 @@ class HomeController extends Controller
         return view('contato', compact('page_title', 'page_description'));
     }
 
+    public function painel()
+    {
+        $page_title = "Bem vindo";
+        $page_description = "";
+
+        return view('blank', compact('page_title', 'page_description'));
+    }
 }
