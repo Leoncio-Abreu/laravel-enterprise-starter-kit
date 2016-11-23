@@ -176,7 +176,7 @@ class ProductionSeeder extends Seeder
             $route->permission()->associate($permBasicAuthenticated);
             $route->save();
         }
-        $routePainel = Route::where('name', 'patch')->get()->first();
+        $routePainel = Route::where('name', 'painel')->get()->first();
         $routePainel->permission()->associate($permBasicAuthenticated);
 		$routePainel->save();
 

@@ -30,19 +30,28 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="carousel slide" id="carousel-759016" >
-						<ol class="carousel-indicators">
-
-{{dd($slide}}							  <li class="active" data-slide-to="{{ $i }}" data-target="#carousel-759016">
-							  </li>
-						</ol>
-						<div class="carousel-inner">
-						@foreach ($slides as $slide)
-							<div class="item {{ $i ? 'active' : ''}}">{{$i=null}}
-								<img src="/upload/slides/{{ $slide->banner }}")>
-								<div class="carousel-caption"></div>
-							</div>
-						@endforeach
-						</div>
+				<ol class="carousel-indicators">
+                      <li class="active" data-slide-to="0" data-target="#carousel-759016">
+                      </li>
+                      <li data-slide-to="1" data-target="#carousel-759016">
+                      </li>
+                      <li data-slide-to="2" data-target="#carousel-759016">
+                      </li>
+                </ol>
+                <div class="carousel-inner">
+					<div class="item active">
+						<img src={{ asset("/img/slide_show_01.jpg") }}>
+                        <div class="carousel-caption"></div>
+                    </div>
+                    <div class="item">
+						<img src={{ asset("/img/slide_show_02.jpg") }}>
+                        <div class="carousel-caption"></div>
+                    </div>
+                    <div class="item">
+						<img src={{ asset("/img/slide_show_03.jpg") }}>
+                        <div class="carousel-caption"></div>
+                    </div>
+				</div>
 						<a class="left carousel-control" href="#carousel-759016" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-759016" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
 					</div>
 				</div>

@@ -45,8 +45,8 @@ class HomeController extends Controller
 					->skip(0)
 					->take(10)
                     ->get();
- 		$slides = \DB::table('slide')
-					->orderBy('visualizar','desc')
+ 		$slides = \DB::table('slides')
+		    ->orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
                     ->get();
@@ -54,19 +54,19 @@ class HomeController extends Controller
         return view('welcome', compact('noticias', 'atividades', 'slides'));
     }
 
-    public function viewatividade($id, $flag = null)
+    public function viewatividade($id)
     {
 		if ( preg_match('/\d/', $id) === 1  ){
 
-			$dnow = \DB::table('atividades')->where('id', '=', $id)
+			$dnow = Noticia::where('id', '=', $id)
 					->value('visualizar');
 
-			$prevPages = \DB::table('atividades')->orderBy('visualizar','desc')
+			$prevPages = Noticia::orderBy('visualizar','desc')
 						->where('visualizar', '>', $dnow)
 						->where('ativo', '=', '1')
 						->first();
 			
-			$nextPages = \DB::table('atividades')->orderBy('visualizar','desc')
+			$nextPages = Noticia::orderBy('visualizar','desc')
 						->where('visualizar', '<', $dnow)
 						->where('ativo', '=', '1')
 						->first();
@@ -83,7 +83,7 @@ class HomeController extends Controller
 		}
 	}
 
-    public function viewnoticia($id, $flag = null)
+    public function viewnoticia($id)
     {
 		if ( preg_match('/\d/', $id) === 1  ){
 
@@ -104,7 +104,7 @@ class HomeController extends Controller
 					->first();
 				
 			if (count($noticia)) {
-				return view('atividades', compact('noticia', 'prevPages', 'nextPages'));
+				return view('noticias', compact('noticia', 'prevPages', 'nextPages'));
 			}
 			else {
 				return view('blank');
