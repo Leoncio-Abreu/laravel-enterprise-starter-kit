@@ -1,40 +1,38 @@
 @extends('layouts.frontend_master')
 @section('content')
-      <div class="row">
-          <div class="col-md-5">
-              <div class="box">
-                      <div class="panel panel-default">
-                        <div class="panel-heading text-center"><img class="img-rounded text-center img-responsive" alt="Bootstrap Image Preview" src="/upload/noticias/banner/@if (count($noticias)){!! $noticias{0}->banner !!}"></div>
-                        <div class="panel-body">
-                          <p>@if (count($noticias)){!! $noticias{0}->descricao !!}@endif</p>
+	<div class="row">
+		<div class="col-md-5">
+			<div class="box">
+				<div class="panel panel-default">
+					<div class="panel-heading text-center"><img class="img-rounded text-center img-responsive" alt="Bootstrap Image Preview" src="/upload/noticias/banner/@if (!is_null($noticias)){!! $noticias{0}->banner !!}@endif"></div>
+                    <div class="panel-body">
+						<p>@if (!is_null($noticias)){!! $noticias{0}->descricao !!}@endif</p>
                         <div class="bootstrap-eh-pull-bottom clearfix">
-                          <a class="btn btn-warning pull-right" href="/view/noticia/@if (count($noticias)){!! $noticias{0}->id !!}@endif" role="button">+ mais »</a>
+							<a class="btn btn-warning pull-right" href="/view/noticia/@if (!is_null($noticias)){!! $noticias{0}->id !!}@endif" role="button">+ mais »</a>
                         </div>
-                        </div>
-                      </div>
-              </div>
-          </div>
-          <div class="col-md-7">
-          <div class="box">
-              <div class="row">
-                  <div class="col-md-6">
-                      <div class="panel panel-default">
-                        <div class="panel-heading"><h2 class="panel-title">@if (count($noticias)){!! $noticias{1}->titulo !!}@endif</h2></div>
+					</div>
+				</div>
+            </div>
+        </div>
+        <div class="col-md-7">
+			<div class="box">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="panel panel-default">
+                        <div class="panel-heading"><h2 class="panel-title">@if (!is_null($noticias)){!! $noticias{1}->titulo !!}@endif</h2></div>
                         <div class="panel-body">
-                          <p>@if (count($noticias)){!! $noticias{1}->descricao !!}@endif</p>
-                          <br>
+                          <p>@if (!is_null($noticias)){!! $noticias{1}->descricao !!}@endif</p>
                         <div class="bootstrap-eh-pull-bottom clearfix">
-                          <a class="btn btn-warning pull-right" href="/view/noticia/{!! $noticias{1}->id !!}@endif" role="button">+ mais »</a>
+                          <a class="btn btn-warning pull-right" href="/view/noticia/@if (!is_null($noticias)){!! $noticias{1}->id !!}@endif" role="button">+ mais »</a>
                         </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="col-md-6">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
                       <div class="panel panel-default">
-                        <div class="panel-heading"><h2 class="panel-title">@if (count($noticias)){!! $noticias{2}->titulo !!}@endif</h2></div>
+                        <div class="panel-heading"><h2 class="panel-title">@if (!is_null($noticias)){!! $noticias{2}->titulo !!}@endif</h2></div>
                         <div class="panel-body">
-                          <p>@if (count($noticias)){!! $noticias{2}->descricao !!}@endif</p>
-                          <br>
+                          <p>@if (!is_null($noticias)){!! $noticias{2}->descricao !!}@endif</p>
                         <div class="bootstrap-eh-pull-bottom clearfix">
                           <a class="btn btn-warning pull-right" href="/view/noticia/@if (count($noticias)){!! $noticias{2}->id !!}@endif" role="button">+ mais »</a>
                         </div>

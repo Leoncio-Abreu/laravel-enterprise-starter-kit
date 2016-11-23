@@ -19,6 +19,7 @@
 									<li><a href="http://integrador.colegiouniao.net">Portal Acadêmico</a></li>
 									<li><a href="http://www.sistemapoliedro.com.br" target="_blank">Poliedro</a></li>
 									<li><a href="http://redepitagoras.com.br" target="_blank">Pitágoras</a></li>
+									<li><a href="http://www.iebeducation.com.br" target="_blank">IEB</a></li>
 									<li><a href="http://www.colegiouniao.net/index.php?option=com_content&view=section&layout=blog&id=12&Itemid=30">Vídeos</a></li>
 								</ul>
 								@if (Auth::user()) <a class="btn btn-warning pull-right" href="painel" target="_blank">Painel</a>@endif
@@ -30,48 +31,20 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="carousel slide" id="carousel-759016" >
-<<<<<<< HEAD
 						<ol class="carousel-indicators">
-
-							  <li class="active" data-slide-to="" data-target="#carousel-759016">
+						@foreach ($slides as $index => $slide)
+							  <li class=" @if($index == 0){{' active'}}@endif" data-slide-to="{{$index}}" data-target="#carousel-759016">
 							  </li>
-							  <li data-slide-to="" data-target="#carousel-759016">
-							  </li>
-							  <li data-slide-to="" data-target="#carousel-759016">
-							  </li>
+						@endforeach
 						</ol>
 						<div class="carousel-inner">
 						@foreach ($slides as $index => $slide)
-							<div class="item active">
+							<div class="item @if($index == 0){{' active'}}@endif">
 								<img src="/upload/slides/{{ $slide->banner }}")>
 								<div class="carousel-caption"></div>
 							</div>
 						@endforeach
 						</div>
-=======
-				<ol class="carousel-indicators">
-                      <li class="active" data-slide-to="0" data-target="#carousel-759016">
-                      </li>
-                      <li data-slide-to="1" data-target="#carousel-759016">
-                      </li>
-                      <li data-slide-to="2" data-target="#carousel-759016">
-                      </li>
-                </ol>
-                <div class="carousel-inner">
-					<div class="item active">
-						<img src={{ asset("/img/slide_show_01.jpg") }}>
-                        <div class="carousel-caption"></div>
-                    </div>
-                    <div class="item">
-						<img src={{ asset("/img/slide_show_02.jpg") }}>
-                        <div class="carousel-caption"></div>
-                    </div>
-                    <div class="item">
-						<img src={{ asset("/img/slide_show_03.jpg") }}>
-                        <div class="carousel-caption"></div>
-                    </div>
-				</div>
->>>>>>> 5f0e54e21a2ea59f6e00fd65e188904a918ddf2c
 						<a class="left carousel-control" href="#carousel-759016" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-759016" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
 					</div>
 				</div>

@@ -146,6 +146,13 @@ class ProductionSeeder extends Seeder
         $routeFaust = Route::where('name', 'faust')->get()->first();
         $routeFaust->permission()->associate($permOpenToAll);
         $routeFaust->save();
+        $routeView = Route::where('name', 'like', "view.%")->get()->all();
+        foreach ($routeView as $route)
+        {
+            $route->permission()->associate($permOpenToAll);
+            $route->save();
+        }
+				
         // Associate basic-authenticated permission to some routes
         $routeDashboard = Route::where('name', 'dashboard')->get()->first();
         $routeDashboard->permission()->associate($permBasicAuthenticated);
@@ -170,7 +177,7 @@ class ProductionSeeder extends Seeder
             $route->save();
         }
 
-        $routeAtividades = Route::where('name', 'like', "slides.%")->get()->all();
+		$routeAtividades = Route::where('name', 'like', "slides.%")->get()->all();
         foreach ($routeAtividades as $route)
         {
             $route->permission()->associate($permBasicAuthenticated);
@@ -179,6 +186,7 @@ class ProductionSeeder extends Seeder
         $routePainel = Route::where('name', 'painel')->get()->first();
         $routePainel->permission()->associate($permBasicAuthenticated);
 		$routePainel->save();
+
 
 		// Associate the audit-log permissions
         $routeAuditView = Route::where('name', 'admin.audit.index')->get()->first();

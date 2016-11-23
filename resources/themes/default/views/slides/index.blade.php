@@ -7,7 +7,8 @@
     <div class='box-body'>
         <div class='col-md-12'>
             <!-- Box -->
-        {!! $grid !!}
+			{!! $filter !!}
+		{!! $grid !!}
 
         </div><!-- /.col -->
 

@@ -23,22 +23,23 @@ class SlidesController extends Controller
         $page_title = 'Apresentação de slides';
         $page_description = 'Pesquisar slide';
 
-/*      $url = new \Zofe\Rapyd\Url();
         $filter = \DataFilter::source(new Slide());
-        $filter->add('visualizar','Visualizar', 'text');
+        $filter->add('visualizar','Visualizar', 'datetime');
+        $filter->add('ativo','Ativar', 'checkbox');
         $filter->submit('Procurar');
         $filter->reset('Resetar');
         $filter->link("slides/create","Novo Slide");
         $filter->build();
-*/
-        $grid = \DataGrid::source(new Slide())->orderBy('visualizar','desc');
+
+        $grid = \DataGrid::source($filter)->orderBy('visualizar','desc');
 		$grid->attributes(array("class"=>"table table-striped"));
         $grid->add('visualizar','Visualizar', true);
+        $grid->add('ativo','Ativar', 'true');
         $grid->add('<img src="/upload/slides/{{ $banner }}" height="120px">','Banner');
         $grid->edit('edit', 'Editar','modify|delete');
         $grid->paginate(20);
         $grid->build();
-        return  view('slides.index', compact('grid', 'page_title', 'page_description'));    }
+        return  view('slides.index', compact('grid', 'page_title', 'page_description','filter'));    }
 
     /**
      * Show the form for creating a new resource.

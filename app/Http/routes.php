@@ -39,8 +39,8 @@ Route::get( 'welcome', ['as' => 'welcome',     'uses' => 'HomeController@welcome
 Route::get( 'unidades', ['as' => 'unidades',     'uses' => 'HomeController@unidades']);
 Route::get( 'historia', ['as' => 'historia',     'uses' => 'HomeController@historia']);
 Route::get( 'contato', ['as' => 'contato',     'uses' => 'HomeController@contato']);
-Route::get( 'view/atividade/{id?}', ['as' => 'view.atividade',     'uses' => 'HomeController@viewatividade']);
-Route::get( 'view/noticia/{id?}', ['as' => 'view.noticia',     'uses' => 'HomeController@viewnoticia']);
+Route::get( 'view/atividade/{id}', ['as' => 'view.atividade',     'uses' => 'HomeController@viewatividade']);
+Route::get( 'view/noticia/{id}', ['as' => 'view.noticia',     'uses' => 'HomeController@viewnoticia']);
 
 // Routes in this group must be authorized.
 Route::group(['middleware' => 'authorize'], function () {

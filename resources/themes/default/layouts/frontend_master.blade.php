@@ -83,9 +83,8 @@
 	</head>
 	<body id="page-top" class="index">
 		<div class="container">
-        @include('partials._frontend_header')
-        @include('partials._frontend_navigation')
-        @yield('content')
+		@include('partials._frontend_header')
+		@yield('content')
         @include('partials._frontend_footer')
 		</div>
 	</body>

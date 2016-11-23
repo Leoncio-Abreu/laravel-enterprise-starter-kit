@@ -2,14 +2,14 @@
 @section('content')
 
 <div class="panel" >
-	<div class="panel-heading clearfix"><h2 class="panel-title">@if (count($noticia)){{ $noticia->titulo}}@endif</h2></div>
-	<div><span>@if (count($noticia)){!! $noticia->texto !!}@endif</br></span>
+	<div class="panel-heading clearfix"><h2 class="panel-title">{{ $noticia->titulo}}</h2></div>
+	<div><span>{{ $noticia->texto }}</br></span>
 		<div class="panel-footer bootstrap-eh-pull-bottom clearfix" style="text-align: center;">
-			@if ($prevPages > 0)
+			@if (count($prevPages))
 				<a class="btn btn-warning pull-left" href="/view/noticia/{{ $noticia->id}}/prev" role="button"><< Anterior</a>
 			@endif
 			<a class="btn btn-warning" href="/" role="button">Voltar</a>
-			@if ($nextPages > 0)
+			@if (count($nextPages))
 			<a class="btn btn-warning pull-right" href="/view/noticia/{{ $noticia->id}}/next" role="button">Seguinte >></a>
 			@endif
         </div>
