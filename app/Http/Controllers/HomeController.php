@@ -8,9 +8,21 @@ use App\Atividade;
 use App\Noticia;
 use App\Slide;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
+	public function __construct() {
+        // this function will run before every action in the controller
+        $this->beforeFilter(function()
+        {
+ 		$slides = Slide::orderBy('visualizar','desc')
+                    ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
+                    ->where('ativo', '=', '1')
+                    ->get();
+		view::share('slides',$slides);
+        });
+    }
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -46,12 +58,7 @@ class HomeController extends Controller
 					->skip(0)
 					->take(10)
                     ->get();
- 		$slides = Slide::orderBy('visualizar','desc')
-                    ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
-                    ->where('ativo', '=', '1')
-                    ->get();
-		\view::share('slides',$slides);
-		return view('welcome',compact('noticias', 'atividades','slides'));
+		return view('welcome',compact('noticias', 'atividades'));
     }
 
 	public function viewatividade($id)
@@ -80,12 +87,12 @@ class HomeController extends Controller
 				$atividade = null;
 				return view('welcome', compact('atividade', 'prevPages', 'nextPages'));
 			}
-			$slides = Slide::orderBy('visualizar','desc')
+/*			$slides = Slide::orderBy('visualizar','desc')
 						->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
 						->where('ativo', '=', '1')
 						->get();
-			\view::share('slides',$slides);
-			if (!is_null($atividade)) {
+			view::share('slides',$slides);
+*/			if (!is_null($atividade)) {
 				return view('atividade', compact('atividade', 'prevPages', 'nextPages'));
 			}
 			else {
@@ -121,12 +128,12 @@ class HomeController extends Controller
 				$noticia = null;
 				return view('welcome', compact('noticia', 'prevPages', 'nextPages'));
 			}
-			$slides = Slide::orderBy('visualizar','desc')
+/*			$slides = Slide::orderBy('visualizar','desc')
 						->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
 						->where('ativo', '=', '1')
 						->get();
-			\view::share('slides',$slides);
-			if (!is_null($noticia)) {
+			view::share('slides',$slides);
+*/			if (!is_null($noticia)) {
 				return view('noticia', compact('noticia', 'prevPages', 'nextPages'));
 			}
 			else {
