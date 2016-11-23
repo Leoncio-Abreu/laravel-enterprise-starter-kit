@@ -45,7 +45,7 @@ class HomeController extends Controller
 					->skip(0)
 					->take(10)
                     ->get();
- 		$slides = \DB::table('slide')
+ 		$slides = \DB::table('slides')
 					->orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
@@ -104,7 +104,7 @@ class HomeController extends Controller
 					->first();
 				
 			if (count($noticia)) {
-				return view('atividades', compact('noticia', 'prevPages', 'nextPages'));
+				return view('noticias', compact('noticia', 'prevPages', 'nextPages'));
 			}
 			else {
 				return view('blank');

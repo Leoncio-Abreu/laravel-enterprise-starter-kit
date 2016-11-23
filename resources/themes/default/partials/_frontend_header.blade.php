@@ -32,12 +32,16 @@
 					<div class="carousel slide" id="carousel-759016" >
 						<ol class="carousel-indicators">
 
-{{dd($slide}}							  <li class="active" data-slide-to="{{ $i }}" data-target="#carousel-759016">
+							  <li class="active" data-slide-to="" data-target="#carousel-759016">
+							  </li>
+							  <li data-slide-to="" data-target="#carousel-759016">
+							  </li>
+							  <li data-slide-to="" data-target="#carousel-759016">
 							  </li>
 						</ol>
 						<div class="carousel-inner">
-						@foreach ($slides as $slide)
-							<div class="item {{ $i ? 'active' : ''}}">{{$i=null}}
+						@foreach ($slides as $index => $slide)
+							<div class="item active">
 								<img src="/upload/slides/{{ $slide->banner }}")>
 								<div class="carousel-caption"></div>
 							</div>
