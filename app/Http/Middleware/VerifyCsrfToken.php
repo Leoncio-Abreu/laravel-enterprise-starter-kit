@@ -12,9 +12,6 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'noticias/imageUpload',
-        'noticias/fileUpload',
-        'atividades/imageUpload',
-        'atividades/fileUpload',
+        '/imageUpload',
     ];
 }

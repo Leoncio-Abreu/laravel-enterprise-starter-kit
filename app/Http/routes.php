@@ -41,6 +41,7 @@ Route::get( 'historia', ['as' => 'historia',     'uses' => 'HomeController@histo
 Route::get( 'contato', ['as' => 'contato',     'uses' => 'HomeController@contato']);
 Route::get( 'view/atividade/{id}', ['as' => 'view.atividade',     'uses' => 'HomeController@viewatividade']);
 Route::get( 'view/noticia/{id}', ['as' => 'view.noticia',     'uses' => 'HomeController@viewnoticia']);
+Route::any( 'imageupload', ['as' => 'imageupload',     'uses' => 'HomeController@imageupload']);
 
 // Routes in this group must be authorized.
 Route::group(['middleware' => 'authorize'], function () {

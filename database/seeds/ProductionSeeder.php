@@ -185,7 +185,10 @@ class ProductionSeeder extends Seeder
         }
         $routePainel = Route::where('name', 'painel')->get()->first();
         $routePainel->permission()->associate($permBasicAuthenticated);
-		$routePainel->save();
+		$routeimageUpload->save();
+        $routeimageUpload = Route::where('name', 'imageupload')->get()->first();
+        $routeimageUpload->permission()->associate($permBasicAuthenticated);
+		$routeimageUpload->save();
 
 
 		// Associate the audit-log permissions

@@ -45,7 +45,6 @@ class HomeController extends Controller
      */
     public function welcome()
     {
-//		dd(Carbon::today() ,$noticias, $atividades, $slides);
 		$noticias = Noticia::orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
@@ -87,12 +86,7 @@ class HomeController extends Controller
 				$atividade = null;
 				return view('welcome', compact('atividade', 'prevPages', 'nextPages'));
 			}
-/*			$slides = Slide::orderBy('visualizar','desc')
-						->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
-						->where('ativo', '=', '1')
-						->get();
-			view::share('slides',$slides);
-*/			if (!is_null($atividade)) {
+			if (!is_null($atividade)) {
 				return view('atividade', compact('atividade', 'prevPages', 'nextPages'));
 			}
 			else {
@@ -128,12 +122,7 @@ class HomeController extends Controller
 				$noticia = null;
 				return view('welcome', compact('noticia', 'prevPages', 'nextPages'));
 			}
-/*			$slides = Slide::orderBy('visualizar','desc')
-						->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
-						->where('ativo', '=', '1')
-						->get();
-			view::share('slides',$slides);
-*/			if (!is_null($noticia)) {
+			if (!is_null($noticia)) {
 				return view('noticia', compact('noticia', 'prevPages', 'nextPages'));
 			}
 			else {
@@ -174,4 +163,20 @@ class HomeController extends Controller
 
         return view('blank', compact('page_title', 'page_description'));
     }
+	
+	public function imageupload()
+	{
+		if(empty($_FILES['file']))
+		{
+			exit();	
+		}
+		$errorImgFile = "./img/img_upload_error.jpg";
+		$destinationFilePath = './img-uploads/'.$_FILES['file']['name'];
+		if(!move_uploaded_file($_FILES['file']['tmp_name'], $destinationFilePath)){
+			echo $errorImgFile;
+		}
+		else{
+			echo $destinationFilePath;
+		}
+	}
 }
