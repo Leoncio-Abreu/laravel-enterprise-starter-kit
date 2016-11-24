@@ -39,7 +39,8 @@
 				word-wrap: break-word;
 			}
 			.panel-title{
-				text-align:center;
+				text-align: center;
+				color: white;
 			}
 			.bg_white {
 				background: white;
