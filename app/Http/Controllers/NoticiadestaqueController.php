@@ -7,11 +7,10 @@ use App\Models\Setting;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Atividade;
+use App\Noticiadestaque;
 use Zofe\Rapyd\Rapyd;
-use Image;
 
-class AtividadesController extends Controller
+class NoticiadestaqueController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,27 +19,26 @@ class AtividadesController extends Controller
      */
     public function index()
     {
-        $page_title = 'Atividades';
-        $page_description = 'Pesquisar Atividade';
+        $page_title = 'Not&#237;cias';
+        $page_description = 'Pesquisar Not&#237;cias';
 
-//        $url = new \Zofe\Rapyd\Url();
-        $filter = \DataFilter::source(new Atividade());
-        $filter->add('titulo','Titulo', 'text');
-        $filter->add('descricao','Descri&ccedil;&atilde;o', 'text');
+        $filter = \DataFilter::source(new Noticiadestaque());
+		$filter->add('titulo','Titulo', 'text');
+        $filter->add('descricao','Descrição', 'text');
         $filter->submit('Procurar');
         $filter->reset('Resetar');
-        $filter->link("atividades/create","Nova atividade");
+        $filter->link("noticiadestaque/create","Nova notícia");
         $filter->build();
 
         $grid = \DataGrid::source($filter)->orderBy('visualizar','desc');
 		$grid->attributes(array("class"=>"table table-striped"));
         $grid->add('visualizar','Visualizar', true);
         $grid->add('titulo','Titulo', true);
-        $grid->add('descricao', 'Descri&ccedil;&atilde;o', true);
+//        $grid->add('descricao', true);
         $grid->edit('edit', 'Editar','modify|delete');
         $grid->paginate(20);
         $grid->build();
-        return	view('atividades.index', compact('filter', 'grid', 'page_title', 'page_description'));    }
+        return  view('noticiadestaque.index', compact('filter', 'grid', 'page_title', 'page_description'));    }
 
     /**
      * Show the form for creating a new resource.
@@ -49,22 +47,27 @@ class AtividadesController extends Controller
      */
     public function create()
     {
-		$page_title ="Atividades";
-		$page_description = "Nova atividade";
+		$page_title ="Not&#237;cias";
+		$page_description = "Nova not&#237;cia";
 
-        $form = \DataForm::source(New Atividade());
-		$form->attributes(['id'=>'atividade']);
+        $form = \DataForm::source(New Noticiadestaque());
+
         $form->add('visualizar','Visualizar','datetime')->rule('required');
         $form->add('ativo','Ativar', 'checkbox');
-		$form->add('titulo','Titulo', 'text')->rule('required|max:32');
-		$form->add('descricao','Descri&ccedil;&atilde;o', 'text')->rule('required|max:128');
-        $form->add('banner','Foto em destaque', 'image')->move('upload/atividades/banner/')->preview(120,80);
-		$form->add('texto','Texto', 'textarea')->attributes(["id"=>"texto"])->rule('required');
-		$form->submit('Salvar');
+		$form->add('orientacao','Orientação','radiogroup')
+				->option('0','Retrato')
+				->option('1','Paisagem')->rule('required');
+		$form->add('titulo','Titulo', 'text')->rule('max:32');
+		$form->add('descricao','Descricao', 'text')->rule('max:128');
+        $form->add('banner','Foto em destaque', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/noticiadestaque/banner/')->preview(120,80);
+		$form->add('texto','Texto', 'textarea')->attr('id','texto');
+/*        $form->add('foto1','Foto 1', 'image')->move('uploads/noticias/')->fit(240, 160)->preview(120,80);
+*/
+		$form->submit('Save');
 
         $form->saved(function () use ($form) {
-            $form->link("/atividades/create","Nova atividade");
-			return \Redirect::to('atividades/index')->with("message","Atividade salva com sucesso!");
+            $form->link("/noticiadestaque/create","Nova notícia");
+			return \Redirect::to('noticiadestaque/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$form->build();
         Rapyd::js('summernote/summernote.min.js');
@@ -74,7 +77,6 @@ class AtividadesController extends Controller
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-//		Rapyd::script("$('#texto').summernote({ height: 400,	lang: 'pt-BR' });
 		Rapyd::script("$('#texto').summernote({
             height: ($(window).height() - 300),
 			lang: 'pt-BR',
@@ -103,13 +105,8 @@ class AtividadesController extends Controller
                     console.log(data);
                 }
             });
-        }
-
-		$('#submitBtn').click(function() {
-			var summernoteContent = $('#texto').summernote('code');
-			$('#texto1').val(summernoteContent);
-		});");
-        return $form->view('atividades.create', compact('form', 'page_title', 'page_description'));
+        };");
+		return $form->view('noticiadestaque.create', compact('form', 'page_title', 'page_description'));
     }
 
     /**
@@ -120,22 +117,25 @@ class AtividadesController extends Controller
      */
     public function edit(Request $request)
     {
-		$page_title ="Atividades";
-		$page_description = "Alterar atividade";
+		$page_title ="Not&#237;cias";
+		$page_description = "Alterar not&#237;cia";
 
-        $edit = \DataEdit::source(New Atividade());
-		$edit->link("atividades/index","Voltar", "BL")->back('');
+        $edit = \DataEdit::source(New Noticiadestaque());
+		$edit->link("/noticiadestaque/index","Voltar", "BL")->back('');
         $edit->add('visualizar','Visualizar','datetime')->rule('required');
         $edit->add('ativo','Ativar', 'checkbox');
-		$edit->add('titulo','Titulo', 'text')->rule('required|max:32');
-		$edit->add('descricao','Descri&ccedil;&atilde;o', 'text')->rule('required|max:128');
-        $edit->add('banner','Foto em destaque', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/atividades/banner/')->preview(120,80);
-		$edit->add('texto','Texto', 'textarea')->attributes(["id"=>"texto"])->rule('required');
+		$edit->add('orientacao','Orientação','radiogroup')
+				->option('0','Retrato')
+				->option('1','Paisagem')->rule('required');
+		$edit->add('titulo','Titulo', 'text')->rule('max:32');
+		$edit->add('descricao','Descricao', 'text')->rule('max:128');
+        $edit->add('banner','Foto em destaque', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/noticiadestaque/banner/')->preview(120,80);
+		$edit->add('texto','Texto', 'textarea')->attr('id','texto');
 
-//		$edit->submit('Save');
 
         $edit->saved(function () use ($edit) {
-			return \Redirect::to('atividades/index')->with("message","Atividade atualizada com sucesso!");
+			$message = \Input::get('texto','<p></p>'); // Summernote input field
+			return \Redirect::to('noticiadestaque/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$edit->build();
         Rapyd::js('summernote/summernote.min.js');
@@ -173,12 +173,7 @@ class AtividadesController extends Controller
                     console.log(data);
                 }
             });
-        }
-
-		$('#submitBtn').click(function() {
-			var summernoteContent = $('#texto').summernote('code');
-			$('#texto1').val(summernoteContent);
-		});");
-        return $edit->view('atividades.edit', compact('edit', 'page_title', 'page_description'));
+        };");
+		return $edit->view('noticiadestaque.edit', compact('edit', 'page_title', 'page_description'));
 	}
 }

@@ -6,6 +6,7 @@ use Redirect;
 use Setting;
 use App\Atividade;
 use App\Noticia;
+use App\Noticiadestaque;
 use App\Slide;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
@@ -46,24 +47,22 @@ class HomeController extends Controller
      */
     public function welcome()
     {
-		$noticia0 = Noticia::orderBy('visualizar','desc')
+		$noticia = Noticiadestaque::orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
-                    ->where('posicao', '=', '1')
                     ->where('ativo', '=', '1')
                     ->first();
-		$noticia1 = Noticia::orderBy('visualizar','desc')
+		$noticia1 = Noticia::orderBy('posicao','asc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
-					->skip(0)
-					->take(10)
+					->take(6)
                     ->get();
  		$atividade = Atividade::orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
-					->skip(0)
-					->take(10)
+					->take(4)
                     ->get();
-		return view('welcome',compact('noticia0', 'noticia1', 'atividade'));
+ 		$links = Atividade::get();
+		return view('welcome',compact('noticia', 'noticia1', 'atividade', 'links'));
     }
 
 	public function viewatividade($id)

@@ -61,7 +61,7 @@ class SlidesController extends Controller
 
         $form->saved(function () use ($form) {
             $form->link("/slides/create","Novo slide");
-			return \Redirect::to('slides/index')->with("message","Slide salvo com sucesso!");
+			return \Redirect::to('/slides/index')->with("message","Slide salvo com sucesso!");
         });
 		$form->build();
 

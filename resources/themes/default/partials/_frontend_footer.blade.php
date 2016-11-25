@@ -1,9 +1,9 @@
-		<div class="row padding-r15-l15"">
+		<div class="row"">
 			<div class="col-md-12">
 				  <img alt="Bootstrap Image Preview" src={{ asset("/img/banner_boton.jpg") }} class="img-rounded text-center img-responsive">
 			</div>
 		</div>
-		<div class="row padding-r15-l15" style="padding-top: 15px">
+		<div class="row" style="padding-top: 15px">
 			<div class="col-md-5">
 				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4609.745778194293!2d-45.26084228446926!3d-21.69866770133328!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cadce11c1b7a85%3A0x2720a00a85a7f34c!2sCol%C3%A9gio+Uni%C3%A3o+-+Unidade+II!5e1!3m2!1spt-BR!2sbr!4v1473357815573" width="460" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
 			</div>
@@ -37,15 +37,14 @@
 					</div>
 				</div>
 			</div>
-			<div class="row padding-r15-l15">
-				<div class="col-md-12">
-					<div class="jumbotron jumbotron_height">
-						<p class="text-center" style="font-size: 14px; color: black;"><strong>Copyright &copy; 2016<a href="http://www.azagga.com.br/" style="color: white;">A/Zagga Comunicação</a>.</strong> Todos os direitos reservados.</p>
-					</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="jumbotron jumbotron_height">
+					<p class="text-center" style="font-size: 14px; color: black;"><strong>Copyright &copy; 2016<a href="http://www.azagga.com.br/" style="color: white;">A/Zagga Comunicação</a>.</strong> Todos os direitos reservados.</p>
 				</div>
 			</div>
 		</div>
-
 		<!-- jQuery 2.1.4 -->
 		<script src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jQuery-2.1.4.min.js") }}" type="text/javascript"></script>
 		<script src="{{ asset ("/bower_components/admin-lte/bootstrap/js/bootstrap.min.js") }}" type="text/javascript"></script>

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNoticiasTable extends Migration
+class CreateNoticiasDestaqueTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,15 @@ class CreateNoticiasTable extends Migration
      */
     public function up()
     {
-        Schema::create('noticias', function (Blueprint $table) {
+        Schema::create('noticiasdestaque', function (Blueprint $table) {
             $table->increments('id');
 			$table->timestamp('visualizar');
+			$table->boolean('orientacao');
 			$table->boolean('ativo');
-			$table->boolean('orientacao')->nullable();
-			$table->string('titulo', 32);
-            $table->string('descricao', 128);
+			$table->string('titulo', 32)->nullable();
+            $table->string('descricao', 128)->nullable();
             $table->string('banner');
-            $table->text('texto');
+            $table->text('texto')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +32,6 @@ class CreateNoticiasTable extends Migration
      */
     public function down()
     {
-        Schema::drop('noticias');
+        Schema::drop('noticiasdestaque');
     }
 }

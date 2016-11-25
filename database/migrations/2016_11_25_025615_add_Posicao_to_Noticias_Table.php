@@ -7,19 +7,20 @@ class AddPosicaoToNoticiasTable extends Migration
 {
     public function up()
     {
-    Schema::table('noticias', function($table) {
-        $table->integer('posicao');
-    });    }
+		Schema::table('noticias', function($table) {
+			$table->integer('posicao');
+		});
+	}
 
     /**
      * Reverse the migrations.
      *
      * @return void
      */
-    public function down()
-    {
-    Schema::table('noticias', function($table) {
-        $table->dropColumn('posicao');
-    });
+		public function down()
+		{
+		Schema::table('noticias', function($table) {
+			$table->dropColumn('posicao');
+		});
 	}
 }

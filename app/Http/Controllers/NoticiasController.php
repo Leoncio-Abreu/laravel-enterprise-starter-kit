@@ -38,8 +38,8 @@ class NoticiasController extends Controller
         $grid->edit('edit', 'Editar','modify|delete');
         $grid->paginate(20);
         $grid->build();
-        return  view('noticias.index', compact('filter', 'grid', 'page_title', 'page_description'));    }
-
+        return  view('noticias.index', compact('filter', 'grid', 'page_title', 'page_description'));
+	}
     /**
      * Show the form for creating a new resource.
      *
@@ -64,7 +64,7 @@ class NoticiasController extends Controller
 
         $form->saved(function () use ($form) {
             $form->link("/noticias/create","Nova notícia");
-			$message = \Input::get('texto','<p></p>'); // Summernote input field
+			return \Redirect::to('noticias/index')->with("message","Noticía introduzida com sucesso!");
         });
 		$form->build();
         Rapyd::js('summernote/summernote.min.js');
