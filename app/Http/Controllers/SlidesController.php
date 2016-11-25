@@ -20,7 +20,7 @@ class SlidesController extends Controller
      */
     public function index()
     {
-        $page_title = 'Apresentação de slides';
+        $page_title = 'ApresentaÃ§Ã£o de slides';
         $page_description = 'Pesquisar slide';
 
         $filter = \DataFilter::source(new Slide());
@@ -48,11 +48,12 @@ class SlidesController extends Controller
      */
     public function create()
     {
-		$page_title ="Apresentação de slides";
+		$page_title ="ApresentaÃ§Ã£o de slides";
 		$page_description = "Novo slide";
 
         $form = \DataForm::source(New Slide());
 		$form->attributes(['id'=>'slide']);
+		$form->set('posicao', '0');
         $form->add('visualizar','Visualizar','datetime')->rule('required');
         $form->add('ativo','Ativar', 'checkbox');
         $form->add('banner','Foto em destaque', 'image')->move('upload/slides/')->preview(120,80);
@@ -63,7 +64,8 @@ class SlidesController extends Controller
 			return \Redirect::to('slides/index')->with("message","Slide salvo com sucesso!");
         });
 		$form->build();
-        return $form->view('slides.create', compact('form', 'page_title', 'page_description'));
+
+		return $form->view('slides.create', compact('form', 'page_title', 'page_description'));
     }
 
     /**
@@ -72,14 +74,15 @@ class SlidesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit()
     {
-		$page_title ="Apresentação de slides";
+		$page_title ="ApresentaÃ§Ã£o de slides";
 		$page_description = "Alterar slide";
 
         $edit = \DataEdit::source(New Slide());
 		$edit->link("/slides/index","Voltar", "BL")->back('');
         $edit->add('visualizar','Visualizar','datetime')->rule('required');
+		$edit->set('posicao', '{{ $posicao }}');
         $edit->add('ativo','Ativar', 'checkbox');
         $edit->add('banner','Slide', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/slides/')->preview(120,80);
 
@@ -89,6 +92,6 @@ class SlidesController extends Controller
 			return \Redirect::to('slides/index')->with("message","Slide atualizado com sucesso!");
         });
 		$edit->build();
-        return $edit->view('slides.edit', compact('edit', 'page_title', 'page_description'));
+        return view('slides.edit', compact('edit', 'page_title', 'page_description'));
 	}
 }

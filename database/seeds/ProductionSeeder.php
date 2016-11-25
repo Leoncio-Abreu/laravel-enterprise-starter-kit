@@ -185,7 +185,7 @@ class ProductionSeeder extends Seeder
         }
         $routePainel = Route::where('name', 'painel')->get()->first();
         $routePainel->permission()->associate($permBasicAuthenticated);
-		$routeimageUpload->save();
+		$routePainel->save();
         $routeimageUpload = Route::where('name', 'imageupload')->get()->first();
         $routeimageUpload->permission()->associate($permBasicAuthenticated);
 		$routeimageUpload->save();

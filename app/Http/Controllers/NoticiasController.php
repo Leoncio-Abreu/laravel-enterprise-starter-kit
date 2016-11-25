@@ -22,7 +22,6 @@ class NoticiasController extends Controller
         $page_title = 'Not&#237;cias';
         $page_description = 'Pesquisar Not&#237;cias';
 
-//        $url = new \Zofe\Rapyd\Url();
         $filter = \DataFilter::source(new Noticia());
         $filter->add('titulo','Titulo', 'text');
         $filter->add('descricao','Descrição', 'text');
@@ -66,42 +65,6 @@ class NoticiasController extends Controller
         $form->saved(function () use ($form) {
             $form->link("/noticias/create","Nova notícia");
 			$message = \Input::get('texto','<p></p>'); // Summernote input field
-			if ($message)
-			$dom = new \DomDocument();
-			$dom->loadHtml( mb_convert_encoding($message, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-		
-			$images = $dom->getElementsByTagName('img');
-			// foreach <img> in the submited message
-			foreach($images as $img){
-				$src = $img->getAttribute('src');
-				
-				// if the img source is 'data-url'
-				if(preg_match('/data:image/', $src)){
-					
-					// get the mimetype
-					preg_match('/data:image\/(?<mime>.*?)\;/', $src, $groups);
-					$mimetype = $groups['mime'];
-					
-					// Generating a random filename
-					$filename = uniqid();
-					$filepath = "/upload/noticias/imageUpload/$filename.$mimetype";
-		
-					// @see http://image.intervention.io/api/
-					$image = Image::make($src)
-					  // resize if required
-					  /* ->resize(300, 200) */
-					  ->encode($mimetype, 100) 	// encode file to the specified mimetype
-					  ->save(public_path($filepath));
-					
-					$new_src = asset($filepath);
-					$img->removeAttribute('src');
-					$img->setAttribute('src', $new_src);
-				} // <!--endif
-			} // <!--endforeach
-			dd($form);
-			$form->model->texto = $dom->saveHTML();
-			$form->model->save();
-			return \Redirect::to('noticias/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$form->build();
         Rapyd::js('summernote/summernote.min.js');
@@ -111,28 +74,36 @@ class NoticiasController extends Controller
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-		Rapyd::script("$('#texto').summernote({ height: 400, lang: 'pt-BR' });");
-		return $form->view('noticias.create', compact('form', 'page_title', 'page_description'));
-    }
+		Rapyd::script("$('#texto').summernote({
+            height: ($(window).height() - 300),
+			lang: 'pt-BR',
+            callbacks: {
+                onImageUpload: function(image) {
+                    uploadImage(image[0]);
+                }
+            }
+        });
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        function uploadImage(image) {
+            var data = new FormData();
+            data.append('image', image);
+            $.ajax({
+                url: '/imageupload',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: data,
+                type: 'post',
+                success: function(url) {
+                    var image = $('<img>').attr('src', 'http://' + url);
+                    $('#texto').summernote('insertNode', image[0]);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        };");
+		return $form->view('noticias.create', compact('form', 'page_title', 'page_description'));
     }
 
     /**
@@ -147,7 +118,7 @@ class NoticiasController extends Controller
 		$page_description = "Alterar not&#237;cia";
 
         $edit = \DataEdit::source(New Noticia());
-$edit->link("noticias/index","Voltar", "BL")->back('');
+		$edit->link("noticias/index","Voltar", "BL")->back('');
         $edit->add('visualizar','Visualizar','datetime')->rule('required');
         $edit->add('ativo','Ativar', 'checkbox');
 		$edit->add('titulo','Titulo', 'text')->rule('required|max:32');
@@ -158,35 +129,6 @@ $edit->link("noticias/index","Voltar", "BL")->back('');
 
         $edit->saved(function () use ($edit) {
 			$message = \Input::get('texto','<p></p>'); // Summernote input field
-
-			$dom = new \DomDocument();
-			$dom->loadHtml( mb_convert_encoding($message, 'HTML-ENTITIES', "UTF-8"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
-			$images = $dom->getElementsByTagName('img');
-			// foreach <img> in the submited message
-			foreach($images as $img){
-				$src = $img->getAttribute('src');
-				// if the img source is 'data-url'
-				if(preg_match('/data:image/', $src)){
-					// get the mimetype
-					preg_match('/data:image\/(?<mime>.*?)\;/', $src, $groups);
-					$mimetype = $groups['mime'];
-					// Generating a random filename
-					$filename = uniqid();
-					$filepath = "/upload/noticias/imageUpload/$filename.$mimetype";
-					// @see http://image.intervention.io/api/
-					$image = Image::make($src)
-					  // resize if required
-					  /* ->resize(300, 200) */
-					  ->encode($mimetype, 100) 	// encode file to the specified mimetype
-					  ->save(public_path($filepath));
-					$new_src = asset($filepath);
-					$img->removeAttribute('src');
-					$img->setAttribute('src', $new_src);
-				} // <!--endif
-			} // <!--endforeach
-//			dd($edit);
-			$edit->model->texto = $dom->saveHTML();
-			$edit->model->save();
 			return \Redirect::to('noticias/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$edit->build();
@@ -197,63 +139,35 @@ $edit->link("noticias/index","Voltar", "BL")->back('');
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-		Rapyd::script("$('#texto').summernote({ height: 400, lang: 'pt-BR' });");
+		Rapyd::script("$('#texto').summernote({
+            height: ($(window).height() - 300),
+			lang: 'pt-BR',
+            callbacks: {
+                onImageUpload: function(image) {
+                    uploadImage(image[0]);
+                }
+            }
+        });
+
+        function uploadImage(image) {
+            var data = new FormData();
+            data.append('image', image);
+            $.ajax({
+                url: '/imageupload',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: data,
+                type: 'post',
+                success: function(url) {
+                    var image = $('<img>').attr('src', 'http://' + url);
+                    $('#texto').summernote('insertNode', image[0]);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        };");
 		return $edit->view('noticias.edit', compact('edit', 'page_title', 'page_description'));
 	}
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-/*	public function imageUpload(Request $request)
-    {
-
-          $file = \Input::file('file');
-          $fileName = time().'.jpg';
-          //$move = Image::make($file->getRealPath())->fit(300,120)->save('public/uploads/images/topics/'.$fileName);
-		  $move = $file->move(public_path()."/upload/noticias/imageUpload/", $fileName);
-		  return '<img src="/upload/noticias/imageUpload/'. $fileName.'" />';
-    }
-*/
-	public function imageUpload(Request $request)
-    {
-
-          $file = \Input::file('file');
-          $fileName = time().'.'.$file->getClientOriginalExtension();
-          //$move = Image::make($file->getRealPath())->fit(300,120)->save('public/uploads/images/topics/'.$fileName);
-		  $move = $file->move(public_path()."/upload/noticias/imageUpload/", $fileName);
-		  return '<img src="/upload/noticias/imageUpload/'. $fileName.'" />';
-    }
-
-	public function fileUpload(Request $request)
-    {
-
-          $file = \Input::file('file');
-          $fileName = $file->getClientOriginalName();
-		  $realfileName = $file->getClientOriginalName();
-		  $move = $file->move(public_path()."/upload/noticias/fileUpload/", $fileName);
-//		  return url().'/upload/noticias/fileUpload/' . $fileName.' '.$fileName.'</A>';
-		  return '<A HREF="'.url().'/upload/noticias/fileUpload/' . $fileName . '">'.$fileName.'</A>';
-//		  return '<A HREF="http://www.tiexpert.net">TI Expert</A>';
-//		  return "/upload/noticias/fileUpload/" . $fileName;
-    }
 }

@@ -9,6 +9,7 @@ use App\Noticia;
 use App\Slide;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
+use Input;
 
 class HomeController extends Controller
 {
@@ -45,19 +46,24 @@ class HomeController extends Controller
      */
     public function welcome()
     {
-		$noticias = Noticia::orderBy('visualizar','desc')
+		$noticia0 = Noticia::orderBy('visualizar','desc')
+                    ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
+                    ->where('posicao', '=', '1')
+                    ->where('ativo', '=', '1')
+                    ->first();
+		$noticia1 = Noticia::orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
 					->skip(0)
 					->take(10)
                     ->get();
- 		$atividades = Atividade::orderBy('visualizar','desc')
+ 		$atividade = Atividade::orderBy('visualizar','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
 					->skip(0)
 					->take(10)
                     ->get();
-		return view('welcome',compact('noticias', 'atividades'));
+		return view('welcome',compact('noticia0', 'noticia1', 'atividade'));
     }
 
 	public function viewatividade($id)
@@ -166,17 +172,16 @@ class HomeController extends Controller
 	
 	public function imageupload()
 	{
-		if(empty($_FILES['file']))
+		if(\Request::ajax())
 		{
-			exit();	
-		}
-		$errorImgFile = "./img/img_upload_error.jpg";
-		$destinationFilePath = './img-uploads/'.$_FILES['file']['name'];
-		if(!move_uploaded_file($_FILES['file']['tmp_name'], $destinationFilePath)){
-			echo $errorImgFile;
-		}
-		else{
-			echo $destinationFilePath;
+			$file = \Input::file('image');
+			if (!is_null($file))
+			{
+				$fileName = time().'.'.$file->getClientOriginalExtension();
+			  //$move = Image::make($file->getRealPath())->fit(300,120)->save('public/uploads/images/topics/'.$fileName);
+				$move = $file->move(public_path()."/upload/imageUpload/", $fileName);
+				return \Response::json(\Request::server('HTTP_HOST').'/upload/imageUpload/'. $fileName);
+			}
 		}
 	}
 }

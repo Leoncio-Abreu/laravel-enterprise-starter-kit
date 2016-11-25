@@ -77,6 +77,10 @@
 			iframe, object, embed {
 				max-width: 100%;
 			}
+			.padding-r15-l15 {
+				padding-right: 15px;
+				padding-left: 15px;
+			}
 			body{ 
 				background: lightgray !important;
 			}

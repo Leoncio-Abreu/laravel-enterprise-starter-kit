@@ -60,7 +60,6 @@ class AtividadesController extends Controller
 		$form->add('descricao','Descricao', 'text')->rule('required|max:128');
         $form->add('banner','Foto em destaque', 'image')->move('upload/atividades/banner/')->preview(120,80);
 		$form->add('texto','Texto', 'textarea')->attributes(["id"=>"texto"])->rule('required');
-
 		$form->submit('Salvar');
 
         $form->saved(function () use ($form) {
@@ -75,7 +74,41 @@ class AtividadesController extends Controller
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-		Rapyd::script("$('#texto').summernote({ height: 400,	lang: 'pt-BR' });");
+//		Rapyd::script("$('#texto').summernote({ height: 400,	lang: 'pt-BR' });
+		Rapyd::script("$('#texto').summernote({
+            height: ($(window).height() - 300),
+			lang: 'pt-BR',
+            callbacks: {
+                onImageUpload: function(image) {
+                    uploadImage(image[0]);
+                }
+            }
+        });
+
+        function uploadImage(image) {
+            var data = new FormData();
+            data.append('image', image);
+            $.ajax({
+                url: '/imageupload',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: data,
+                type: 'post',
+                success: function(url) {
+                    var image = $('<img>').attr('src', 'http://' + url);
+                    $('#texto').summernote('insertNode', image[0]);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
+		$('#submitBtn').click(function() {
+			var summernoteContent = $('#texto').summernote('code');
+			$('#texto1').val(summernoteContent);
+		});");
         return $form->view('atividades.create', compact('form', 'page_title', 'page_description'));
     }
 
@@ -112,35 +145,40 @@ class AtividadesController extends Controller
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
 		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
-		Rapyd::script("$('#texto').summernote({ height: 400, lang: 'pt-BR' });");
+		Rapyd::script("$('#texto').summernote({
+            height: ($(window).height() - 300),
+			lang: 'pt-BR',
+            callbacks: {
+                onImageUpload: function(image) {
+                    uploadImage(image[0]);
+                }
+            }
+        });
+
+        function uploadImage(image) {
+            var data = new FormData();
+            data.append('image', image);
+            $.ajax({
+                url: '/imageupload',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: data,
+                type: 'post',
+                success: function(url) {
+                    var image = $('<img>').attr('src', 'http://' + url);
+                    $('#texto').summernote('insertNode', image[0]);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        }
+
+		$('#submitBtn').click(function() {
+			var summernoteContent = $('#texto').summernote('code');
+			$('#texto1').val(summernoteContent);
+		});");
         return $edit->view('atividades.edit', compact('edit', 'page_title', 'page_description'));
 	}
-
-	public function imageUpload(Request $request)
-    {
-		if($request->hasFile('image')){
-			$filename = str_random(20).'_'.$request->file('image')->getClientOriginalName();
-//	        $image_path = base_path() . '/public/images/thread/';
-		    $request->file('image')->move(public_path()."/upload/atividades/imageUpload/", $fileName);
-		    return $filename;    
-	    }
-		else{
-		    return 'Ups! A transferência da imagem falhou.';
-	    }
-
-//          $file = \Input::file('file');
-//          $fileName = time().'.'.$file->getClientOriginalExtension();
-//		  $move = $file->move();
-//		  return '<img src="/upload/atividades/imageUpload/'. $fileName.'" />';
-    }
-
-	public function fileUpload(Request $request)
-    {
-
-          $file = \Input::file('file');
-          $fileName = $file->getClientOriginalName();
-		  $realfileName = $file->getClientOriginalName();
-		  $move = $file->move(public_path()."/upload/atividades/fileUpload/", $fileName);
-		  return '<A HREF="'.url().'/upload/atividades/fileUpload/' . $fileName . '">'.$fileName.'</A>';
-    }
 }
