@@ -11,6 +11,7 @@ use App\Slide;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\View;
 use Input;
+use Image;
 
 class HomeController extends Controller
 {
@@ -171,14 +172,22 @@ class HomeController extends Controller
 	
 	public function imageupload()
 	{
+		$width=200;
+		$height=200;
 		if(\Request::ajax())
 		{
 			$file = \Input::file('image');
+//			dd($file->getRealPath());
 			if (!is_null($file))
 			{
 				$fileName = time().'.'.$file->getClientOriginalExtension();
-			  //$move = Image::make($file->getRealPath())->fit(300,120)->save('public/uploads/images/topics/'.$fileName);
-				$move = $file->move(public_path()."/upload/imageUpload/", $fileName);
+				$move = Image::make($file->getRealPath())->resize($width, $height, function ($c) {
+        $c->aspectRatio();
+        $c->upsize();
+})->save(public_path()."/upload/imageUpload/".$fileName);
+//$img = Image::canvas($width, $height);
+//$image = Image::make($path);
+//				$move = $file->move(public_path()."/upload/imageUpload/", $fileName);
 				return \Response::json(\Request::server('HTTP_HOST').'/upload/imageUpload/'. $fileName);
 			}
 		}

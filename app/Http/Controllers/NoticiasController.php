@@ -27,11 +27,17 @@ class NoticiasController extends Controller
         $filter->add('descricao','Descrição', 'text');
         $filter->submit('Procurar');
         $filter->reset('Resetar');
-        $filter->link("noticias/create","Nova notícia");
+        $filter->link("/noticias/create","Nova notícia");
         $filter->build();
 
-        $grid = \DataGrid::source($filter)->orderBy('visualizar','desc');
+        $grid = \DataGrid::source($filter)->orderBy('posicao','asc');
 		$grid->attributes(array("class"=>"table table-striped"));
+		$grid->add('<a class="" title="Moover para cima" href="/noticias/up/{{ $id }}"><span class="fa fa-level-up"> </span></a>
+    <a class="" title="Mover para baixo" href="/noticias/down/{{ $id }}"><span class="fa fa-level-down"> </span></a>','Posicao');
+/*
+
+		<a href="/noticias/up/{{ $id }}"><i class="fa fa-level-up" aria-hidden="true"></i></a>&nbsp;&nbsp;<a href="/noticias/down/{{ $id }}"><i class="fa fa-level-down" aria-hidden="true"></i></a>','Posicao');
+*/
         $grid->add('visualizar','Visualizar', true);
         $grid->add('titulo','Titulo', true);
 //        $grid->add('descricao', true);
@@ -128,7 +134,7 @@ class NoticiasController extends Controller
 
 
         $edit->saved(function () use ($edit) {
-			$message = \Input::get('texto','<p></p>'); // Summernote input field
+//			$message = \Input::get('texto','<p></p>'); // Summernote input field
 			return \Redirect::to('noticias/index')->with("message","Noticía atualizada com sucesso!");
         });
 		$edit->build();
