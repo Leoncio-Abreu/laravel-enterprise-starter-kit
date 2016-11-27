@@ -3,7 +3,7 @@
 
 <div class="panel" >
 	<div class="panel-heading clearfix"><h2 class="panel-title">@if (count($noticia)){{ $noticia->titulo}}@endif</h2></div>
-	<div><span>@if (count($noticia)){!! $noticia->texto !!}@endif</br></span>
+	<div class="panel-body">@if (count($noticia)){!! $noticia->texto !!}@endif</br>
 		<div class="panel-footer bootstrap-eh-pull-bottom clearfix" style="text-align: center;">
 			@if ($prevPages > 0)
 				<a class="btn btn-warning pull-left" href="/view/noticia/{{ $noticia->id}}/prev" role="button"><< Anterior</a>

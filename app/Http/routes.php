@@ -59,6 +59,7 @@ Route::group(['middleware' => 'authorize'], function () {
 	Route::any( 'noticias/index',   ['as' => 'noticias.index', 'uses' => 'NoticiasController@index']);
 	Route::any( 'noticias/store',   ['as' => 'noticias.store', 'uses' => 'NoticiasController@store']);
 	Route::any('noticias/edit/{one?}/{two?}/{three?}/{four?}/{five?}',    ['as' => 'noticias.edit',    'uses' => 'NoticiasController@edit']);
+	Route::get( 'view/atividade/{id}', ['as' => 'view.atividade',     'uses' => 'HomeController@viewatividade']);
 
 	Route::any( 'atividades/create',   ['as' => 'atividades.create', 'uses' => 'AtividadesController@create']);
 	Route::any( 'atividades/index',   ['as' => 'atividades.index', 'uses' => 'AtividadesController@index']);
@@ -74,6 +75,8 @@ Route::group(['middleware' => 'authorize'], function () {
 	Route::any( 'links/index',											['as' => 'links.index',  'uses' => 'LinksController@index']);
 	Route::any( 'links/store',											['as' => 'links.store',  'uses' => 'LinksController@store']);
 	Route::any( 'links/edit/{one?}/{two?}/{three?}/{four?}/{five?}',    ['as' => 'links.edit',   'uses' => 'LinksController@edit']);
+
+	Route::get( 'posicao/{table}/{move}/{id}', ['as' => 'posicao',     'uses' => 'HomeController@posicao']);
 
 	// Site administration section
     Route::group(['prefix' => 'admin'], function () {

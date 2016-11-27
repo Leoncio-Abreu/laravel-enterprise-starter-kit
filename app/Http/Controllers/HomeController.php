@@ -19,7 +19,7 @@ class HomeController extends Controller
         // this function will run before every action in the controller
         $this->beforeFilter(function()
         {
- 		$slides = Slide::orderBy('visualizar','desc')
+ 		$slides = Slide::orderBy('posicao','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
                     ->get();
@@ -48,22 +48,18 @@ class HomeController extends Controller
      */
     public function welcome()
     {
-		$noticia = Noticiadestaque::orderBy('visualizar','desc')
+		$noticias = Noticia::orderBy('posicao','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
-                    ->first();
-		$noticia1 = Noticia::orderBy('posicao','asc')
-                    ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
-                    ->where('ativo', '=', '1')
-					->take(6)
+					->take(7)
                     ->get();
- 		$atividade = Atividade::orderBy('visualizar','desc')
+ 		$atividades = Atividade::orderBy('posicao','desc')
                     ->where('visualizar', '<', \DB::raw('CURRENT_TIMESTAMP'))
                     ->where('ativo', '=', '1')
 					->take(4)
                     ->get();
- 		$links = Atividade::get();
-		return view('welcome',compact('noticia', 'noticia1', 'atividade', 'links'));
+ 		$links = Atividade::take(4)->get();
+		return view('welcome',compact('noticias', 'atividades', 'links'));
     }
 
 	public function viewatividade($id)
@@ -73,12 +69,12 @@ class HomeController extends Controller
 			$dnow = Atividade::where('id', '=', $id)
 					->value('visualizar');
 			If (!is_null($dnow)){
-				$prevPages = Atividade::orderBy('visualizar','desc')
+				$prevPages = Atividade::orderBy('posicao','desc')
 						->where('visualizar', '>', $dnow)
 						->where('ativo', '=', '1')
 						->first();
 			If (is_null($prevPages)){ $prevPages = null;}		
-				$nextPages = Atividade::orderBy('visualizar','desc')
+				$nextPages = Atividade::orderBy('posicao','desc')
 						->where('visualizar', '<', $dnow)
 						->where('ativo', '=', '1')
 						->first();
@@ -109,12 +105,12 @@ class HomeController extends Controller
 			$dnow = Noticia::where('id', '=', $id)
 					->value('visualizar');
 			If (!is_null($dnow)){
-				$prevPages = Noticia::orderBy('visualizar','desc')
+				$prevPages = Noticia::orderBy('posicao','desc')
 						->where('visualizar', '>', $dnow)
 						->where('ativo', '=', '1')
 						->first();
 			If (is_null($prevPages)){ $prevPages = [];}		
-				$nextPages = Noticia::orderBy('visualizar','desc')
+				$nextPages = Noticia::orderBy('posicao','desc')
 						->where('visualizar', '<', $dnow)
 						->where('ativo', '=', '1')
 						->first();
@@ -189,6 +185,64 @@ class HomeController extends Controller
 //$image = Image::make($path);
 //				$move = $file->move(public_path()."/upload/imageUpload/", $fileName);
 				return \Response::json(\Request::server('HTTP_HOST').'/upload/imageUpload/'. $fileName);
+			}
+		}
+	}
+	public function posicao($table=null,$move=null,$id=null)
+	{
+		$pos=null;
+		$ppos=null;
+		$pid=null;
+		$npos=null;
+		$nid=null;
+		$tb=['noticias', 'atividades', 'slides'];
+		$mv=['up', 'down'];
+
+		if (!is_null($table) & !is_null($move) & !is_null($id) & in_array($table,$tb) & in_array($move,$mv))
+		{
+			$apos = Noticia::where('id', '=', $id)
+						->take(1)
+						->get();
+			If (count($apos)){
+				$pos=$apos[0]->posicao;
+				$id=$apos[0]->id;
+				$prevpos = Noticia::orderBy('posicao','desc')
+					->where('posicao', '<', $pos)
+					->take(1)
+					->get();
+				If (count($prevpos)){
+					$ppos=$prevpos[0]->posicao;
+					$pid=$prevpos[0]->id;
+				};
+					$nextpos = Noticia::orderBy('posicao','asc')
+							->where('posicao', '>', $pos)
+							->take(1)
+							->get();
+				If (count($nextpos)){
+					$npos=$nextpos[0]->posicao;
+					$nid=$nextpos[0]->id;
+				};
+				if ($move == 'up')
+				{
+					\DB::table($table)
+						->where('id', $id)
+						->update(array('posicao' => $npos));
+					\DB::table($table)
+						->where('id', $nid)
+						->update(array('posicao' => $pos));
+
+				}
+				else if ($move == 'down')
+				{
+					\DB::table($table)
+						->where('id', $id)
+						->update(array('posicao' => $ppos));
+					\DB::table($table)
+						->where('id', $pid)
+						->update(array('posicao' => $pos));
+				}
+				return redirect()->route($table.'.index');
+//				dd($ppos,$apos,$npos);
 			}
 		}
 	}

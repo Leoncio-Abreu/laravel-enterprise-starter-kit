@@ -16,6 +16,7 @@ class CreateAtividadesTable extends Migration
             $table->increments('id');
 			$table->timestamp('visualizar');
 			$table->boolean('ativo');
+			$table->boolean('posicao');
 			$table->string('titulo', 32);
             $table->string('descricao', 128);
             $table->string('banner');

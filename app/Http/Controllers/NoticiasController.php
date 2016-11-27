@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Noticia;
+use App\Noticiahole;
 use Zofe\Rapyd\Rapyd;
 
 class NoticiasController extends Controller
@@ -30,10 +31,10 @@ class NoticiasController extends Controller
         $filter->link("/noticias/create","Nova notícia");
         $filter->build();
 
-        $grid = \DataGrid::source($filter)->orderBy('posicao','asc');
+        $grid = \DataGrid::source($filter)->orderBy('posicao','des');
 		$grid->attributes(array("class"=>"table table-striped"));
-		$grid->add('<a class="" title="Moover para cima" href="/noticias/up/{{ $id }}"><span class="fa fa-level-up"> </span></a>
-    <a class="" title="Mover para baixo" href="/noticias/down/{{ $id }}"><span class="fa fa-level-down"> </span></a>','Posicao');
+		$grid->add('<a class="" title="Moover para cima" href="/posicao/noticias/up/{{ $id }}"><span class="fa fa-level-up">{{$id}}</span></a>
+    <a class="" title="Mover para baixo" href="/posicao/noticias/down/{{ $id }}"><span class="fa fa-level-down">{{$posicao}}</span></a>','Posicao');
 /*
 
 		<a href="/noticias/up/{{ $id }}"><i class="fa fa-level-up" aria-hidden="true"></i></a>&nbsp;&nbsp;<a href="/noticias/down/{{ $id }}"><i class="fa fa-level-down" aria-hidden="true"></i></a>','Posicao');
@@ -56,12 +57,12 @@ class NoticiasController extends Controller
 		$page_title ="Not&#237;cias";
 		$page_description = "Nova not&#237;cia";
 
-        $form = \DataForm::source(New Noticia());
+        $form = \DataForm::source(New Noticiahole());
 
         $form->add('visualizar','Visualizar','datetime')->rule('required');
         $form->add('ativo','Ativar', 'checkbox');
-		$form->add('titulo','Titulo', 'text')->rule('required|max:32');
-		$form->add('descricao','Descricao', 'text')->rule('required|max:128');
+		$form->add('titulo','Titulo', 'textarea')->rule('required|max:32');
+		$form->add('descricaoooooo','Descricao', 'text')->attr('id','descricao')->rule('required|max:128');
         $form->add('banner','Foto em destaque', 'image')->rule('mimes:jpeg,jpg,png,gif|required|max:10000')->move('upload/noticias/banner/')->preview(120,80);
 		$form->add('texto','Texto', 'textarea')->attr('id','texto')->rule('required');
 /*        $form->add('foto1','Foto 1', 'image')->move('uploads/noticias/')->fit(240, 160)->preview(120,80);
@@ -79,7 +80,8 @@ class NoticiasController extends Controller
 		Rapyd::css('summernote\plugin\databasic\summernote-ext-databasic.css');
 		Rapyd::js('summernote\plugin\databasic\summernote-ext-databasic.js');
 		Rapyd::js('summernote\plugin\hello\summernote-ext-hello.js');
-		Rapyd::js('summernote\plugin\specialchars\summernote-ext-specialchars.js');
+		Rapyd::js('summ:q
+		ernote\plugin\specialchars\summernote-ext-specialchars.js');
 		Rapyd::script("$('#texto').summernote({
             height: ($(window).height() - 300),
 			lang: 'pt-BR',
@@ -93,7 +95,14 @@ class NoticiasController extends Controller
         function uploadImage(image) {
             var data = new FormData();
             data.append('image', image);
+			data.append('height', 200);
+			data.append('with', 200);
             $.ajax({
+            xhr: function() {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) myXhr.upload.addEventListener('progress',progressHandlingFunction, false);
+                return myXhr;
+            },
                 url: '/imageupload',
                 cache: false,
                 contentType: false,
@@ -103,6 +112,50 @@ class NoticiasController extends Controller
                 success: function(url) {
                     var image = $('<img>').attr('src', 'http://' + url);
                     $('#texto').summernote('insertNode', image[0]);
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+            });
+        };
+		function progressHandlingFunction(e){
+			if(e.lengthComputable){
+				$('progress').attr({value:e.loaded, max:e.total});
+				// reset progress on complete
+				if (e.loaded == e.total) {
+					$('progress').attr('value','0.0');
+				}
+			}
+		};
+		$('#descricao').summernote({
+            height: ($(window).height() - 300),
+			lang: 'pt-BR',
+            callbacks: {
+                onImageUpload: function(image) {
+                    uploadImage2(image[0]);
+                }
+            }
+        });
+        function uploadImage2(image) {
+            var data = new FormData();
+            data.append('image', image);
+			data.append('height', 200);
+			data.append('with', 200);
+            $.ajax({
+            xhr: function() {
+                var myXhr = $.ajaxSettings.xhr();
+                if (myXhr.upload) myXhr.upload.addEventListener('progress',progressHandlingFunction, false);
+                return myXhr;
+            },
+                url: '/imageupload',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: data,
+                type: 'post',
+                success: function(url) {
+                    var image = $('<img>').attr('src', 'http://' + url);
+                    $('#descricao').summernote('insertNode', image[0]);
                 },
                 error: function(data) {
                     console.log(data);

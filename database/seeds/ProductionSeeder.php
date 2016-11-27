@@ -170,12 +170,6 @@ class ProductionSeeder extends Seeder
             $route->permission()->associate($permBasicAuthenticated);
             $route->save();
         }
-        $routeNoticiadestaque = Route::where('name', 'like', "noticiadestaque.%")->get()->all();
-        foreach ($routeNoticiadestaque as $route)
-        {
-            $route->permission()->associate($permBasicAuthenticated);
-            $route->save();
-        }
         $routeAtividades = Route::where('name', 'like', "atividades.%")->get()->all();
         foreach ($routeAtividades as $route)
         {
@@ -201,6 +195,13 @@ class ProductionSeeder extends Seeder
 
 		$routeimageUpload = Route::where('name', 'like', "imageupload%")->get()->all();
         foreach ($routeimageUpload as $route)
+        {
+            $route->permission()->associate($permBasicAuthenticated);
+            $route->save();
+        }
+
+		$routePosicao = Route::where('name', 'like', "posicao%")->get()->all();
+        foreach ($routePosicao as $route)
         {
             $route->permission()->associate($permBasicAuthenticated);
             $route->save();
@@ -576,50 +577,6 @@ class ProductionSeeder extends Seeder
             'parent_id'     => $menuSecurity->id,   // Parent is security.
             'route_id'      => Route::where('name', 'like', "admin.routes.index")->get()->first()->id,
             'permission_id' => null,                // Get permission from route.
-        ]);
-        $menuNoticiadestaque = Menu::create([
-            'name'          => 'noticiasdestaque',
-            'label'         => 'Not&#237;cias em Destaque',
-            'position'      => 997,                 // Artificially high number to ensure that it is rendered last.
-            'icon'          => 'fa fa-newspaper-o',
-            'separator'     => false,
-            'url'           => null,                // No url.
-            'enabled'       => true,
-            'parent_id'     => $menuHome->id,       // Parent is root.
-            'route_id'      => Route::where('name', 'like', "noticiadestaque.create")->get()->first()->id,                // No route
-            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
-                                                   // any sub-items, the admin menu will be rendered, otherwise it will
-                                                    // not.
-        ]);
-        // Create Clientes container.
-        $menuNovaNoticiadestaque = Menu::create([
-            'name'          => 'novanoticiadestaque',
-            'label'         => 'Nova not&#237;cia em destaque',
-            'position'      => 1,                 // Artificially high number to ensure that it is rendered last.
-            'icon'          => 'fa fa-file-o',
-            'separator'     => false,
-            'url'           => null,                // No url.
-            'enabled'       => true,
-            'parent_id'     => $menuNoticiadestaque->id,       // Parent is root.
-            'route_id'      => Route::where('name', 'like', "noticiadestaque.create")->get()->first()->id,
-            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
-                                                   // any sub-items, the admin menu will be rendered, otherwise it will
-                                                    // not.
-        ]);
-
-        $menuPesquisarNoticia = Menu::create([
-            'name'          => 'pesquisarnoticiadestaque',
-            'label'         => 'Pesquisar not&#237;cias em destaque',
-            'position'      => 2,                 // Artificially high number to ensure that it is rendered last.
-            'icon'          => 'fa fa-search',
-            'separator'     => false,
-            'url'           => null,                // No url.
-            'enabled'       => true,
-            'parent_id'     => $menuNoticiadestaque->id,       // Parent is root.
-            'route_id'      => Route::where('name', 'like', "noticiadestaque.index")->get()->first()->id,
-            'permission_id' => null,                // Get permission from sub-items. If the user has permission to see/use
-                                                   // any sub-items, the admin menu will be rendered, otherwise it will
-                                                    // not.
         ]);
         $menuNoticias = Menu::create([
             'name'          => 'noticias',
